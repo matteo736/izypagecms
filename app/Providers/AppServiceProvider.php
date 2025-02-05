@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use App\Services\DatabaseConfigService;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(DatabaseConfigService::class, function ($app) {
+            $config = include(storage_path('izy-starter/izy-fallback-config.php'));
+            return new DatabaseConfigService($config);
+        });
     }
 
     /**
@@ -21,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        $activeTheme = 'izy-helloTheme';
+        view()->share('activeTheme', $activeTheme);
     }
 }

@@ -11,10 +11,12 @@
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "noEmit": true,
+        "baseUrl": "./",
         "paths": {
-            "@/*": ["./resources/js/*"],
-            "ziggy-js": ["./vendor/tightenco/ziggy"]
+            "@/*": ["./resources/izy/*"],
+            "ziggy-js": ["./vendor/tightenco/ziggy"],
+            "@types/*": ["./resources/types/*"] // Alias per la cartella types
         }
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"]
+    "include": ["resources/izy/**/*.ts", "resources/izy/**/*.tsx", "resources/izy/**/*.d.ts", "resources/types/*", "resources/types/**/*"]
 }

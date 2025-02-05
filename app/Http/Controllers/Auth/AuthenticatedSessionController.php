@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\UserCheckHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -16,11 +17,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): Response
+    public function create(): Response | RedirectResponse
     {
+        // Controlla se la tabella users è vuota
+        if (!UserCheckHelper::userPopulated()) {
+            // Reindirizza alla pagina di registrazione se non ci sono utenti
+            return redirect()->route('register');
+        }
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
+            'title' => config('izy-admin-titles.login')
         ]);
     }
 
@@ -33,7 +40,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('izy.admin', absolute: false));
     }
 
     /**

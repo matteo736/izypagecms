@@ -1,27 +1,33 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use App\Models\Setting;
+use App\Models\Page;
+
+// Rotta per la pagina iniziale
+Route::get('izyAdmin', function () {
+    return Inertia::render('Welcome', [
+        'title' => 'Welcome',
+    ]);
+})->middleware(['auth', 'role:!subscriber'])
+->name('izy.admin');
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+    return Inertia::render('Themes/izy-helloTheme/pageModels/StaticPageModel', [
+        'title' => 'Welcome',
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+include base_path('routes/auth.php');
+include base_path('routes/admin.php');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
+/*
+- rotta catch-all posizionata al fondo, in questo modo tutte le altre rotte predefinite per il
+- CMS verranno associate per prime rispetto a quelle dedicate al sito dell'utente
+*/ 
+Route::get('{slug}', function ($slug) {
+    $page = Page::where('slug', $slug)->firstOrFail();
+    $activeTheme = Setting::where('key_name', 'active_theme')->first()->value;
+    return Inertia::render('Themes/' . $activeTheme . 'pageModels/', ['content' => $page->content]);
+})->where('slug', '.*');
