@@ -3,7 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Models\Setting;
-use App\Models\Page;
+use App\Models\Post;
 
 // Rotta per la pagina iniziale
 Route::get('izyAdmin', function () {
@@ -27,7 +27,7 @@ include base_path('routes/admin.php');
 - CMS verranno associate per prime rispetto a quelle dedicate al sito dell'utente
 */ 
 Route::get('{slug}', function ($slug) {
-    $page = Page::where('slug', $slug)->firstOrFail();
+    $page = Post::where('slug', $slug)->firstOrFail();
     $activeTheme = Setting::where('key_name', 'active_theme')->first()->value;
     return Inertia::render('Themes/' . $activeTheme . 'pageModels/', ['content' => $page->content]);
 })->where('slug', '.*');

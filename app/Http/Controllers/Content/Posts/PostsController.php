@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Content\Pages;
+namespace App\Http\Controllers\Content\Posts;
 
 use Illuminate\Http\Request;
-use App\Models\Page;
+use App\Models\Post;
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use App\Models\Setting;
 
-class PagesController extends Controller
+class PostsController extends Controller
 {
     public function show($slug)
     {
-        $page = Page::where('slug', $slug)
+        $post = Post::where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
     
@@ -19,11 +20,11 @@ class PagesController extends Controller
     
         $themePath = 'Themes/' . $activeTheme . '/pageModels/';
     
-        return match ($page->type) {
-            'post' => $this->renderContent($page, $themePath . 'SinglePageModel'),
-            'archive' => $this->renderContent($page, $themePath . 'ArchivePageModel'),
-            'page' => $this->renderContent($page, $themePath . 'StaticPageModel'),
-            default => $this->renderContent($page, $themePath . 'ErrorPageModel'),
+        return match ($post->type) {
+            'post' => $this->renderContent($post, $themePath . 'SinglePageModel'),
+            'archive' => $this->renderContent($post, $themePath . 'ArchivePageModel'),
+            'page' => $this->renderContent($post, $themePath . 'StaticPageModel'),
+            default => $this->renderContent($post, $themePath . 'ErrorPageModel'),
         };
     }
     
@@ -38,7 +39,7 @@ class PagesController extends Controller
     public function index()
     {
         // Recupera tutte le pagine e carica il nome dell'autore
-        $pages = Page::with('author:id,name')->get();
+        $pages = Post::with('author:id,name')->get();
 
         return Inertia::render('Content/AllPages', [
             'pages' => $pages,
@@ -50,7 +51,7 @@ class PagesController extends Controller
      */
     public function single($id)
     {
-        $page = Page::findOrFail($id); // Recupera una pagina per ID
+        $page = Post::findOrFail($id); // Recupera una pagina per ID
         return Inertia::render('Content/SinglePageEditor', [
             'page' => $page,
         ]);
@@ -66,7 +67,7 @@ class PagesController extends Controller
             'layout' => 'required|array', // Deve essere un array (il JSON della pagina)
         ]);
 
-        $page = Page::create([
+        $page = Post::create([
             'title' => $data['title'],
             'content' => json_encode($data['layout']), // Salva il layout come JSON
         ]);
@@ -79,7 +80,7 @@ class PagesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $page = Page::findOrFail($id);
+        $page = Post::findOrFail($id);
 
         $data = $request->validate([
             'title' => 'sometimes|string|max:255',
@@ -104,7 +105,7 @@ class PagesController extends Controller
      */
     public function destroy($id)
     {
-        $page = Page::findOrFail($id);
+        $page = Post::findOrFail($id);
         $page->delete();
 
         return response()->json(['message' => 'Pagina eliminata con successo!']);

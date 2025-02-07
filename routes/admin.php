@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Setup\SetupDBController;
-use App\Http\Controllers\Content\Pages\PagesController;
+use App\Http\Controllers\Content\Posts\PostsController;
 ////setup--database
 Route::middleware('guest')->group(function () {
     Route::get('/setup/setupdb', [SetupDBController::class, 'render'])
@@ -16,9 +16,9 @@ Route::middleware('guest')->group(function () {
 ////izy-administration
 Route::middleware('auth')->prefix('izyAdmin')->group(function () {
     Route::prefix('Pages')->group(function () {
-        Route::get('/all', [PagesController::class, 'index'])
+        Route::get('/all', [PostsController::class, 'index'])
         ->name('pages');
-        Route::get('/{id}', [PagesController::class, 'single'])
+        Route::get('/{id}', [PostsController::class, 'single'])
         ->name('page');
     });
 });

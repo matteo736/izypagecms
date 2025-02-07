@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Page extends Model
+class Post extends Model
 {
     use HasFactory;
+
+    protected $table = 'posts'; // Definiamo il nome della tabella
 
     // Definiamo i campi che possono essere assegnati in massa
     protected $fillable = [
@@ -15,7 +17,8 @@ class Page extends Model
         'slug', 
         'meta_description', 
         'content', 
-        'status', 
+        'status',
+        'post_type_id', 
         'author_id', 
         'published_at'
     ];

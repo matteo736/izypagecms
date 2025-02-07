@@ -26,7 +26,7 @@ const AllPages: React.FC<AllPagesProps> = ({ pages }) => {
                     </div>
                     :
                     <div className='m-auto text-primary underline'>
-                        No Pages Found.
+                        No pages Found.
                     </div>
                 }
 

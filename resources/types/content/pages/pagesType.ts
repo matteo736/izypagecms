@@ -1,31 +1,42 @@
-// interfaccia Autore
 export interface Author {
     id: number;
     name: string;
+    // Altri campi relativi all'autore
 }
 
 export interface Section {
-    type: keyof JSX.IntrinsicElements;
-    url?: string;
-    content?: string;
+    id: number;
+    title: string;
+    content: string;
+    // Altri campi relativi alla sezione
 }
 
 export interface Content {
     sections: Section[];
 }
 
-// Definisci l'interfaccia per una singola pagina
-export interface Page {
-    id: number;        // Identificatore unico della pagina
-    title: string;     // Titolo della pagina
+// Definisci un tipo più generico per i post
+export interface Post {
+    id: number;
+    image: string;
+    title: string;
     content: string;
     status: 'draft' | 'published';
-    author: Author; // Contenuto della pagina (può essere una stringa o JSON)
+    author: Author;
     author_id: number;
     meta_description: null | string;
     meta_keywords: null | string[];
-    parent_id: null | number;
     slug: string;
 }
+
+// Definisci il tipo per l'array di post
+export type PostArray = Post[];
+
+// Definisci l'interfaccia per una singola pagina
+export interface Page extends Post {
+    parent_id: null | number;
+}
+
 // Definisci il tipo per l'array di pagine
-export type PagesArray = Page[];
+export type PageArray = Page[];
+
