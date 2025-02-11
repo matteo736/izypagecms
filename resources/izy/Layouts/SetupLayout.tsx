@@ -15,9 +15,9 @@ function SetupLayout({ children, errors, message, title, className }: SetupLayou
     <main className='min-h-screen min-w-full flex flex-col justify-center items-center bg-background'>
       <div className='bg-secondary p-12 border shadow-xl rounded-md mx-12'>
         <TopBar/>
+        <h1 className="page-title text-center mb-2">{title}</h1>
         <div className={className}>
           <Head title={title} />
-          <h1 className="page-title text-center mb-2">{title}</h1>
           {children}
         </div>
         {message && <div className="text-green-500 mt-4 w-full text-center">{message}</div>}
