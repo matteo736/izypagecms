@@ -11,7 +11,25 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register auth routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "auth" middleware group. Now create something great!
+|
+| Every route in this file is prefixed with /izyAdmin because is the admin
+| panel of the application. The routes are grouped by the middleware
+| 'guest' and 'auth' to separate the routes that are only for guests
+| and the routes that are only for authenticated users.
+|
+|--------------------------------------------------------------------------
+*/  
+
+Route::middleware('guest')->prefix('izyAdmin')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
@@ -35,7 +53,7 @@ Route::middleware('guest')->group(function () {
         ->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('izyAdmin')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 
