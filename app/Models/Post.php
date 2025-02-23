@@ -13,25 +13,30 @@ class Post extends Model
 
     // Definiamo i campi che possono essere assegnati in massa
     protected $fillable = [
-        'title', 
-        'slug', 
-        'meta_description', 
-        'content', 
+        'title',
+        'slug',
+        'meta_description',
+        'meta_keywords',
+        'content',
         'status',
-        'post_type_id', 
-        'author_id', 
-        'published_at'
+        'post_type_id',
+        'author_id',
     ];
 
     // Cast per gestire il formato dei dati
     protected $casts = [
         'content' => 'array', // Converte il contenuto JSON in un array
-        'published_at' => 'datetime', // Converte la data di pubblicazione
     ];
 
     // Relazione con l'autore (utente)
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Relazione con l'autore (utente)
+    public function post_type()
+    {
+        return $this->belongsTo(Post_Type::class, 'post_type_id');
     }
 }
