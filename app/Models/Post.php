@@ -34,7 +34,7 @@ class Post extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    // Relazione con l'autore (utente)
+    // Relazione con il tipo di post (post_type)
     public function post_type()
     {
         return $this->belongsTo(Post_Type::class, 'post_type_id');
