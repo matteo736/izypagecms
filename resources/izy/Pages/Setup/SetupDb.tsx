@@ -10,7 +10,7 @@ import { Form, Field } from '@types/setup/FormTypes'
 import LabelInput from '../../Components/labelInput';
 import { usePage } from '@inertiajs/react';
 
-const DbConfigForm: React.FC<{ dbConfig: Form; message: string; error: string }> = ({ dbConfig, message, error }) => {
+const DbConfigForm: React.FC<{ dbConfig: Form; title: string; status: string | null }> = ({ dbConfig, title, status }) => {
   const { data, setData, post, processing, errors, transform, reset } = useForm<Form>({
     ...dbConfig,
   });
@@ -42,7 +42,7 @@ const DbConfigForm: React.FC<{ dbConfig: Form; message: string; error: string }>
 
   return (
     <>
-      <SetupLayout errors={flash.error} message={flash.message} className={LayoutClassName} title={'Setup Database'} >
+      <SetupLayout errors={flash.error} message={flash.message} className={LayoutClassName} title={title} >
         <form onSubmit={handleSubmit} className="lg:w-fit w-full">
           {fields.map((field): React.ReactNode => {
             return <LabelInput<Form> name={field.name} label={field.label} type={field.type} setData={setData} data={data} options={field.options} errors={errors} />
@@ -51,7 +51,7 @@ const DbConfigForm: React.FC<{ dbConfig: Form; message: string; error: string }>
             Save Configuration
           </Button>
         </form>
-        {error || !dbConfig.initialized ? <DbSetupDescription /> : null}
+        {!dbConfig.initialized ? <DbSetupDescription /> : null}
       </SetupLayout>
     </>
   );

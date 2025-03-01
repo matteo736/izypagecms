@@ -1,6 +1,6 @@
 <?php
 
-return [
+return array (
   'dbType' => 'pgsql',
   'host' => '127.0.0.1',
   'dbName' => 'izypagecms',
@@ -9,4 +9,4 @@ return [
   'password' => 'LilG05_',
   'initialized' => true,
   'admin_registred' => true,
-];
+);

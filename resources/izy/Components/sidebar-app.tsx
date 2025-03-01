@@ -1,8 +1,9 @@
-import { Calendar, Home, Inbox, Search, Settings, Notebook } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, Notebook, User } from "lucide-react"
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -11,6 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/Components/ui/sidebar"
 import { Link } from "@inertiajs/react"
+import { Button } from "./ui/button"
 
 // Menu items.
 const items = [
@@ -63,6 +65,15 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarContent>
+          <Button variant="destructive" size="sm">
+            <Link href={route('logout')} method="post">
+              <User />
+            </Link>
+          </Button>
+        </SidebarContent>
+      </SidebarFooter>
     </Sidebar>
   )
 }

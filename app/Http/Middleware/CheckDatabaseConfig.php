@@ -24,10 +24,6 @@ class CheckDatabaseConfig
 
     public function handle(Request $request, Closure $next)
     {
-        // Recupera la configurazione di fallback
-        static $filePath = storage_path('/izy-starter/izy-fallback-config.php');
-        $fallbackconfig = include($filePath);
-
         // Recupera lo stato della cache
         $dbCacheConfig = Cache::get('db_configured', false);
 
@@ -40,7 +36,7 @@ class CheckDatabaseConfig
             return $next($request);
         }
         // Se la cache non è configurata e la configurazione non è stata completata, reindirizza al setup
-        if (!$dbCacheConfig && !$fallbackconfig['initialized']) {
+        if (!$dbCacheConfig && !$this->databaseConfigService->config['initialized']) {
             return redirect()->route('setup.database');
         }
 

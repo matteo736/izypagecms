@@ -23,30 +23,22 @@ class DatabaseConfigService
     public function testConnection(): bool
     {
         try {
-            $dsn = "{$this->config['dbType']}:host={$this->config['host']};port={$this->config['port']};dbname={$this->config['dbName']}";
+            $dsn = "{$this->config['dbType']}:host={$this->config['host']};port={$this->config['port']}";
             $pdo = new PDO($dsn, $this->config['username'], $this->config['password'], [
-                PDO::ATTR_TIMEOUT => 5,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]);
-            Log::info('Connection is successful!');
             return true;
         } catch (PDOException $e) {
-            Log::error('Database connection failed: ' . $e->getMessage(), [
-                'code' => $e->getCode(),
-                'dsn' => $dsn,
-            ]);
-            return false;
-        } catch (\Exception $e) {
-            Log::error('Unexpected error: ' . $e->getMessage());
+            Log::error('Database connection failed: ' . $e->getMessage());
             return false;
         }
     }
 
     public function connectConfig(): void
     {
-        // 2. Imposta la nuova connessione come default
+        // 1. Imposta la nuova connessione come default
         config()->set('database.default', $this->config['dbType']); // Nuovo tipo di connessione
-        // 3. Modifica le impostazioni della nuova connessione predefinita
+        // 2. Modifica le impostazioni della nuova connessione predefinita
         config()->set("database.connections.{$this->config['dbType']}", [
             'driver' => $this->config['dbType'],
             'host' => $this->config['host'],
@@ -56,7 +48,7 @@ class DatabaseConfigService
             'port' => (int) $this->config['port'],
             // altre impostazioni, se necessarie
         ]);
-        //purga e riconnetti 
+        // 3. purga e riconnetti 
         DB::purge(config('database.default'));
         DB::reconnect(config('database.default'));
     }
@@ -65,7 +57,7 @@ class DatabaseConfigService
     public function updateData(array $newConfig): void
     {
         $this->config = $newConfig;
-        Log::info('Updated data in DatabaseConfigService --> pwd: ' . $this->config['password']);
+        Log::info($this->config);
     }
 
     //aggiorna la configurazione e connettila
@@ -75,41 +67,52 @@ class DatabaseConfigService
         $this->connectConfig();
     }
 
-    // Esegui le migrazioni solo se necessario
+    // Esegui le migrazioni iniziali solo se necessario
     public function runStartingIzyMigrations(): void
     {
-        Log::info('entra in runmigrations');
         $connection = $this->config['dbType'];
         if (!Schema::connection($connection)->hasTable('migrations')) {
             try {
-                // Esegui la migrazione
+                DB::connection($connection)->beginTransaction();
                 Artisan::call('migrate:fresh', ['--database' => $connection, '--force' => true]);
+                DB::connection($connection)->commit();
             } catch (\Exception $e) {
+                DB::connection($connection)->rollBack();
                 Log::error("Errore durante l'esecuzione del comando: " . $e->getMessage());
             }
-            Log::debug("Completato il blocco try di migrations.");
         }
     }
 
-    public function migrateOldSession($oldConnection): void
+    public function migrateActiveSession($oldConnection, $sessionId): void
     {
-        if ($oldConnection == $this->config['dbType']) {
-            Log::info('i driver della nuova e della vecchia configurazione sono uguali, non serve migrare le sessioni');
-        } else {
-            $oldSessions = DB::connection($oldConnection)->table('sessions')->get();
+        // Recupera il nome del database corrente
+        $oldDbName = config("database.connections.$oldConnection.database");
 
-            DB::connection($this->config['dbType'])->table('sessions')->insert(
-                $oldSessions->map(function ($session) {
-                    return [
-                        'id' => $session->id,
-                        'user_id' => $session->user_id,
-                        'ip_address' => $session->ip_address,
-                        'user_agent' => $session->user_agent,
-                        'payload' => $session->payload,
-                        'last_activity' => $session->last_activity,
-                    ];
-                })->toArray()
-            );
+        if ($oldDbName == $this->config['dbName']) {
+            Log::info('Il nome del nuovo e del vecchio database è uguale, non serve migrare le sessioni');
+            return;
+        }
+
+        try {
+            // Verifica che entrambe le connessioni siano attive
+            if (!DB::connection($oldConnection)->getPdo() || !DB::connection($this->config['dbType'])->getPdo()) {
+                Log::error('Una delle connessioni al database non è attiva. Impossibile migrare la sessione.');
+                return;
+            }
+
+            // Recupera la sessione attiva dal vecchio database
+            $activeSession = DB::connection($oldConnection)->table('sessions')->where('id', $sessionId)->first();
+
+            if ($activeSession) {
+                // Inserisci la sessione attiva nel nuovo database
+                DB::connection($this->config['dbType'])->table('sessions')->insert((array) $activeSession);
+                Log::info('Migrazione della sessione attiva completata con successo.');
+            } else {
+                Log::info('Nessuna sessione attiva trovata nel vecchio database.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Errore durante la migrazione della sessione attiva: ' . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -139,11 +142,7 @@ class DatabaseConfigService
 
     public function setConfigCacheDbInit(): void
     {
-        Log::info('Entrato in setTrueCacheDbInit');
-        // Forza un output debug per verificare l'esecuzione
-        //dd('Debug: Sono dentro la funzione setTrueCacheDbInit');
         try {
-            Log::info('Driver cache corrente: ' . config('cache.default'));
             if ($this->config['initialized']) {
                 Cache::put(config('izy-cache-keys.db_configured'), $this->config, now()->addMinutes(60));
                 Log::info('Cache aggiornata con db_configured con i valori di configurazione');

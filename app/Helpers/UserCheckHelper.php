@@ -19,19 +19,14 @@ class UserCheckHelper
         $dbinfo = self::logDatabaseInfo();
         $fallback = include storage_path('/izy-starter/izy-fallback-config.php');
         $cacheConfig = Cache::get(config('izy-cache-keys.db_configured'), $fallback);
-
-        if ($fallback['admin_registred']) {
-            return true;
+        if ($cacheConfig['dbType'] !== $dbinfo['driver']) {
+            return DB::connection($cacheConfig['dbType'])->table('users')->count() > 0;
         } else {
-            if ($cacheConfig['dbType'] !== $dbinfo['driver']) {
-                return DB::connection($cacheConfig['dbType'])->table('users')->count() > 0;
-            } else {
-                return User::count() > 0;
-            }
+            return User::count() > 0;
         }
     }
 
-        /**
+    /**
      * Verifica se l'admin si sta registrando
      *
      * @return bool
@@ -42,14 +37,10 @@ class UserCheckHelper
         $fallback = include storage_path('/izy-starter/izy-fallback-config.php');
         $cacheConfig = Cache::get(config('izy-cache-keys.db_configured'), $fallback);
 
-        if ($fallback['admin_registred']) {
-            return true;
+        if ($cacheConfig['dbType'] !== $dbinfo['driver']) {
+            return DB::connection($cacheConfig['dbType'])->table('users')->count() == 1;
         } else {
-            if ($cacheConfig['dbType'] !== $dbinfo['driver']) {
-                return DB::connection($cacheConfig['dbType'])->table('users')->count() == 1;
-            } else {
-                return User::count() == 1;
-            }
+            return User::count() == 1;
         }
     }
 
