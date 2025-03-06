@@ -87,7 +87,7 @@ class DatabaseConfigService
     {
         return $this->config;
     }
-    
+
     /**
      * Aggiorna la configurazione interna.
      *
@@ -226,7 +226,7 @@ class DatabaseConfigService
     public function setConfigCacheDbInit(): void
     {
         try {
-            if (!empty($this->config['initialized'])) {
+            if ($this->config['initialized']) {
                 Cache::put(
                     config('izy-cache-keys.db_configured'),
                     $this->config,
