@@ -28,7 +28,7 @@ class SetupDBController extends Controller
     public function render(): Response
     {
         // manda la configurazione attiva del db senza la password
-        $clear_config = $this->databaseConfigService->config;
+        $clear_config = $this->databaseConfigService->getConfig();
         $clear_config['password'] = '';
         // manda la vista con la configurazione del db
         return Inertia::render('Setup/SetupDb', [
@@ -46,8 +46,9 @@ class SetupDBController extends Controller
      */
     public function setconfig(Request $request)
     {
-        // recupero del driver della configurazione corrente
-        $oldDefaultConfigDriver = config('database.default');
+        // recupero del driver e il nome della configurazione corrente
+        $oldConfigDriver = config('database.default');
+        $oldDbName = config("database.connections.{$oldConfigDriver}.database");
         // Recupera l'ID della sessione attiva prima di cambiare la configurazione del database
         $sessionId = session()->getId();
         // Validazione dei dati
@@ -62,7 +63,7 @@ class SetupDBController extends Controller
         ]);
 
         // Aggiorna i dati per la connessione al database
-        $this->databaseConfigService->config = $validatedData;
+        $this->databaseConfigService->updateData($validatedData);
 
         try {
             // Controlla la connessione al database
@@ -74,7 +75,7 @@ class SetupDBController extends Controller
                 // Fai partire le migrazioni iniziali se necessario
                 $this->databaseConfigService->runStartingIzyMigrations();
                 // migra i dati delle vecchie sessioni salvate sulla vecchia connessione
-                $this->databaseConfigService->migrateActiveSession($oldDefaultConfigDriver, $sessionId);
+                $this->databaseConfigService->migrateActiveSession($oldConfigDriver, $oldDbName, $sessionId);
                 //seeder per inizializzare le tabelle dei ruoli e dei permessi
                 $this->databaseConfigService->runPermissionSeeder();
                 $this->databaseConfigService->runRoleSeeder();

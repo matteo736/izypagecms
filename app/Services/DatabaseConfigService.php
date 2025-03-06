@@ -12,19 +12,31 @@ use Illuminate\Support\Facades\Cache;
 
 class DatabaseConfigService
 {
-    public $config;
+    /**
+     * @var array
+     */
+    protected $config;
 
+    /**
+     * DatabaseConfigService constructor.
+     *
+     * @param array $config
+     */
     public function __construct(array $config)
     {
         $this->config = $config;
     }
 
-    // Testa la connessione al database
+    /**
+     * Testa la connessione al database.
+     *
+     * @return bool
+     */
     public function testConnection(): bool
     {
         try {
             $dsn = "{$this->config['dbType']}:host={$this->config['host']};port={$this->config['port']}";
-            $pdo = new PDO($dsn, $this->config['username'], $this->config['password'], [
+            new PDO($dsn, $this->config['username'], $this->config['password'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ]);
             return true;
@@ -34,40 +46,73 @@ class DatabaseConfigService
         }
     }
 
-    public function connectConfig(): void
+    /**
+     * Costruisce l'array di configurazione per la connessione.
+     *
+     * @return array
+     */
+    protected function buildConnectionConfig(): array
     {
-        // 1. Imposta la nuova connessione come default
-        config()->set('database.default', $this->config['dbType']); // Nuovo tipo di connessione
-        // 2. Modifica le impostazioni della nuova connessione predefinita
-        config()->set("database.connections.{$this->config['dbType']}", [
-            'driver' => $this->config['dbType'],
-            'host' => $this->config['host'],
+        return [
+            'driver'   => $this->config['dbType'],
+            'host'     => $this->config['host'],
             'database' => $this->config['dbName'],
             'username' => $this->config['username'],
             'password' => $this->config['password'],
-            'port' => (int) $this->config['port'],
-            // altre impostazioni, se necessarie
-        ]);
-        // 3. purga e riconnetti 
-        DB::purge(config('database.default'));
-        DB::reconnect(config('database.default'));
+            'port'     => (int) $this->config['port'],
+            // Altre impostazioni se necessarie...
+        ];
     }
 
-    // Aggiorna la configurazione del database
+    /**
+     * Imposta la nuova configurazione del database e riconnette.
+     */
+    public function connectConfig(): void
+    {
+        $dbType = $this->config['dbType'];
+        config()->set('database.default', $dbType);
+        config()->set("database.connections.{$dbType}", $this->buildConnectionConfig());
+
+        // Purga e riconnetti
+        DB::purge($dbType);
+        DB::reconnect($dbType);
+    }
+
+    /**
+     * Restituisci la configurazione interna.
+     *
+     * @return array $config
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+    
+    /**
+     * Aggiorna la configurazione interna.
+     *
+     * @param array $newConfig
+     */
     public function updateData(array $newConfig): void
     {
         $this->config = $newConfig;
-        Log::info($this->config);
+        Log::info('Configurazione aggiornata', $this->config);
     }
 
-    //aggiorna la configurazione e connettila
-    public function connectNewConfig($newConfig): void
+    /**
+     * Aggiorna la configurazione e riconnette.
+     *
+     * @param array $newConfig
+     */
+    public function connectNewConfig(array $newConfig): void
     {
         $this->updateData($newConfig);
         $this->connectConfig();
     }
 
-    // Esegui le migrazioni iniziali solo se necessario
+    /**
+     * Esegue le migrazioni iniziali se la tabella 'migrations' non esiste.
+     */
     public function runStartingIzyMigrations(): void
     {
         $connection = $this->config['dbType'];
@@ -76,36 +121,45 @@ class DatabaseConfigService
                 DB::connection($connection)->beginTransaction();
                 Artisan::call('migrate:fresh', ['--database' => $connection, '--force' => true]);
                 DB::connection($connection)->commit();
+                Log::info("Migrazioni iniziali eseguite sul database {$connection}.");
             } catch (\Exception $e) {
                 DB::connection($connection)->rollBack();
-                Log::error("Errore durante l'esecuzione del comando: " . $e->getMessage());
+                Log::error("Errore durante l'esecuzione delle migrazioni: " . $e->getMessage());
             }
         }
     }
 
-    public function migrateActiveSession($oldConnection, $sessionId): void
+    /**
+     * Migra la sessione attiva dal vecchio database al nuovo.
+     *
+     * @param string $oldConnection
+     * @param string $oldDbName
+     * @param mixed $sessionId
+     *
+     * @throws \Exception
+     */
+    public function migrateActiveSession(string $oldConnection, string $oldDbName, $sessionId): void
     {
-        // Recupera il nome del database corrente
-        $oldDbName = config("database.connections.$oldConnection.database");
-
-        if ($oldDbName == $this->config['dbName']) {
-            Log::info('Il nome del nuovo e del vecchio database è uguale, non serve migrare le sessioni');
+        if ($oldDbName === $this->config['dbName']) {
+            Log::info('Il nome del nuovo e del vecchio database è uguale, non serve migrare le sessioni.');
             return;
         }
 
         try {
-            // Verifica che entrambe le connessioni siano attive
-            if (!DB::connection($oldConnection)->getPdo() || !DB::connection($this->config['dbType'])->getPdo()) {
+            if (!$this->areConnectionsActive($oldConnection, $this->config['dbType'])) {
                 Log::error('Una delle connessioni al database non è attiva. Impossibile migrare la sessione.');
                 return;
             }
 
-            // Recupera la sessione attiva dal vecchio database
-            $activeSession = DB::connection($oldConnection)->table('sessions')->where('id', $sessionId)->first();
+            $activeSession = DB::connection($oldConnection)
+                ->table('sessions')
+                ->where('id', $sessionId)
+                ->first();
 
             if ($activeSession) {
-                // Inserisci la sessione attiva nel nuovo database
-                DB::connection($this->config['dbType'])->table('sessions')->insert((array) $activeSession);
+                DB::connection($this->config['dbType'])
+                    ->table('sessions')
+                    ->insert((array) $activeSession);
                 Log::info('Migrazione della sessione attiva completata con successo.');
             } else {
                 Log::info('Nessuna sessione attiva trovata nel vecchio database.');
@@ -116,40 +170,73 @@ class DatabaseConfigService
         }
     }
 
-    // Funzione che esegue il seeder dei permessi
+    /**
+     * Verifica se entrambe le connessioni sono attive.
+     *
+     * @param string $connectionA
+     * @param string $connectionB
+     *
+     * @return bool
+     */
+    protected function areConnectionsActive(string $connectionA, string $connectionB): bool
+    {
+        try {
+            DB::connection($connectionA)->getPdo();
+            DB::connection($connectionB)->getPdo();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Esegue un seeder specifico.
+     *
+     * @param string $seederClass
+     */
+    protected function runSeeder(string $seederClass): void
+    {
+        try {
+            Artisan::call('db:seed', ['--class' => $seederClass]);
+            Log::info("Seeder {$seederClass} eseguito con successo.");
+        } catch (\Exception $e) {
+            Log::error("Errore eseguendo il seeder {$seederClass}: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Esegue il seeder dei permessi.
+     */
     public function runPermissionSeeder(): void
     {
-        try {
-            // Esegui il seeder dei permessi
-            Artisan::call('db:seed', ['--class' => 'PermissionSeeder']);
-            Log::info('Permissions seeder executed successfully.');
-        } catch (\Exception $e) {
-            Log::error('Error executing permission seeder: ' . $e->getMessage());
-        }
+        $this->runSeeder('PermissionSeeder');
     }
 
-    // Funzione che esegue il seeder dei ruoli
+    /**
+     * Esegue il seeder dei ruoli.
+     */
     public function runRoleSeeder(): void
     {
-        try {
-            // Esegui il seeder dei ruoli
-            Artisan::call('db:seed', ['--class' => 'RoleSeeder']);
-            Log::info('Role seeder executed successfully.');
-        } catch (\Exception $e) {
-            Log::error('Error executing role seeder: ' . $e->getMessage());
-        }
+        $this->runSeeder('RoleSeeder');
     }
 
+    /**
+     * Aggiorna il cache con i valori di configurazione se il database è inizializzato.
+     */
     public function setConfigCacheDbInit(): void
     {
         try {
-            if ($this->config['initialized']) {
-                Cache::put(config('izy-cache-keys.db_configured'), $this->config, now()->addMinutes(60));
-                Log::info('Cache aggiornata con db_configured con i valori di configurazione');
+            if (!empty($this->config['initialized'])) {
+                Cache::put(
+                    config('izy-cache-keys.db_configured'),
+                    $this->config,
+                    now()->addMinutes(60)
+                );
+                Log::info('Cache aggiornata con db_configured.');
             }
         } catch (\Exception $e) {
-            Log::error('Errore in setTrueCacheDbInit', ['exception' => $e->getMessage()]);
-            throw $e; // Rilancia l'errore se necessario
+            Log::error('Errore in setConfigCacheDbInit', ['exception' => $e->getMessage()]);
+            throw $e;
         }
     }
 }

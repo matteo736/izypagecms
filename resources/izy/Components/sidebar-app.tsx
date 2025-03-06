@@ -67,11 +67,18 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarContent>
-          <Button variant="destructive" size="sm">
-            <Link href={route('logout')} method="post">
-              <User />
-            </Link>
-          </Button>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem key={'logout'}>
+                <SidebarMenuButton asChild variant="destructive" size="sm" >
+                  <Link href={route('logout')} method="post">
+                    <User />
+                    <span>Logout</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarContent>
       </SidebarFooter>
     </Sidebar>

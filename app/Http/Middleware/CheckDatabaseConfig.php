@@ -36,7 +36,7 @@ class CheckDatabaseConfig
             return $next($request);
         }
         // Se la cache non è configurata e la configurazione non è stata completata, reindirizza al setup
-        if (!$dbCacheConfig && !$this->databaseConfigService->config['initialized']) {
+        if (!$dbCacheConfig && !$this->databaseConfigService->getConfig()['initialized']) {
             return redirect()->route('setup.database');
         }
 
