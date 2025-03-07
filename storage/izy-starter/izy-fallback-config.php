@@ -8,5 +8,4 @@ return array (
   'username' => 'postgres',
   'password' => 'LilG05_',
   'initialized' => true,
-  'admin_registred' => true,
 );

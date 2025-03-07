@@ -1,6 +1,6 @@
 import LabelInput from "../../Components/labelInput"
 import SetupLayout from "@/Layouts/SetupLayout"
-import { Field, Form } from '@types/setup/FormTypes'
+import { Field, Form } from '@types/FormTypes'
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 import { Button } from "@/components/ui/button";

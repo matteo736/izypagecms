@@ -9,6 +9,7 @@ export type Field = {
   name: string;
   type: HTMLInputTypeAttribute;
   options?: string[]; // Per i campi 'select'
+  disabled?: boolean;
 }
 
 // Definisci un tipo per un form generico

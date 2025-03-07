@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Helpers\UserCheckHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -19,11 +18,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response | RedirectResponse
     {
-        // Controlla se la tabella users è vuota
-        if (!UserCheckHelper::userPopulated()) {
-            // Reindirizza alla pagina di registrazione se non ci sono utenti
-            return redirect()->route('register');
-        }
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),

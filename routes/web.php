@@ -10,7 +10,7 @@ Route::get('izyAdmin', function () {
     return Inertia::render('Welcome', [
         'title' => 'Welcome',
     ]);
-})->middleware(['auth', 'role:!subscriber'])
+})->middleware(['auth'])
 ->name('izy.admin');
 
 Route::get('/', function () {

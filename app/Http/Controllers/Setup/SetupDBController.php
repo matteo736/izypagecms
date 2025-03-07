@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Setup;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\Inertia;
@@ -70,7 +71,7 @@ class SetupDBController extends Controller
             if ($this->databaseConfigService->testConnection()) {
                 // Connessione al database riuscita
                 //--------------------------------------------------------------------------------
-                //settata la connessione al nuovo db per questa richiesta
+                //setta la connessione al nuovo db per questa richiesta
                 $this->databaseConfigService->connectConfig();
                 // Fai partire le migrazioni iniziali se necessario
                 $this->databaseConfigService->runStartingIzyMigrations();
@@ -87,8 +88,17 @@ class SetupDBController extends Controller
                  * di scrittura nel file di configurazione izy-fallback
                  */
                 $this->databaseConfigService->setConfigCacheDbInit();
-                // Reindirizza alla rotta 'izyAdmin' con un messaggio di successo
-                return redirect()->route('izy.admin');
+                /*
+                 * se la tabella degli utenti è vuota reindirizza alla registrazione
+                 * altrimenti reindirizza alla dashboard
+                 */
+                if (User::count() == 0) {
+                    // Reindirizza alla rotta 'register' se non ci sono utenti
+                    return redirect()->route('register', ['isFirstUser' => true]);
+                } else {
+                    // Reindirizza alla rotta 'izyAdmin'
+                    return redirect()->route('izy.admin');
+                }
             } else {
                 // Passa il messaggio di errore e rimanda alla rotta precedente
                 return redirect()->back()->with('error', 'Connessione al database fallita. Riprova.');

@@ -14,6 +14,7 @@ export default defineConfig({
     resolve: {
         alias: {
           '@': path.resolve(__dirname, 'resources/izy'), // Imposta il percorso base della tua cartella 'resources/izy'
+          '@types': path.resolve(__dirname, './resources/types')
         },
     },
 });

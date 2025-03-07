@@ -26,11 +26,7 @@ class CheckDatabaseConfig
     {
         // Recupera lo stato della cache
         $dbCacheConfig = Cache::get('db_configured', false);
-
-        // Se la cache è configurata e il tipo di database è diverso, aggiorna la configurazione
-        if ($dbCacheConfig && config('database.default') != $dbCacheConfig['dbType']) {
-            $this->databaseConfigService->connectNewConfig($dbCacheConfig);
-        }
+        
         // Controlla se la rotta è di setup database
         if ($request->routeIs('setup.database') || $request->routeIs('setup.database.response')) {
             return $next($request);

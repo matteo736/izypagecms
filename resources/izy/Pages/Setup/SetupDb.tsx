@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import DbSetupDescription from './SetupDb/InitialDbDescription';
 import { FormEventHandler } from 'react';
 import { route } from 'ziggy-js';
-import { Form, Field } from '@types/setup/FormTypes'
+import { Form, Field } from '@types/FormTypes'
 import LabelInput from '../../Components/labelInput';
 import { usePage } from '@inertiajs/react';
 

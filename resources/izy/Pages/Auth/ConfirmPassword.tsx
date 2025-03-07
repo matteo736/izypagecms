@@ -2,8 +2,8 @@ import LabelInput from '@/Components/labelInput';
 import SetupLayout from "@/Layouts/SetupLayout";
 import { Button } from '@/components/ui/button';
 import { Head, useForm } from '@inertiajs/react';
-import { Password } from '@types/setup/FormTypes';
-import { Field } from '@types/setup/FormTypes';
+import { Password } from '@types/FormTypes';
+import { Field } from '@types/FormTypes';
 import { FormEventHandler } from 'react';
 
 export default function ConfirmPassword() {

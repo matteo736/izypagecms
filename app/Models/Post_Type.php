@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 class Post_Type extends Model
 {
     // Specifica il nome della tabella se non segue la convenzione (singolare del nome del modello in minuscolo e con "s")
