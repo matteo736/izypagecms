@@ -21,7 +21,7 @@ class RegisteredUserController extends Controller
     public function create(Request $request): Response
     {
         $isFirstUser = $request->query('isFirstUser', false);
-        return Inertia::render('Auth/Register',[
+        return Inertia::render('Auth/Register', [
             'status' => session('status'),
             'title' => config('izy-admin-titles.register'),
             'isFirstUser' => $isFirstUser,
@@ -33,14 +33,14 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {   
+    public function store(Request $request)
+    {
         $request->validate([
             'username' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => 'string|exists:roles,name', // Assicurati che il ruolo esista
-        ]); 
+        ]);
 
         $user = User::create([
             'name' => $request->username,
@@ -50,8 +50,20 @@ class RegisteredUserController extends Controller
 
         $user->assignRole($request->role);
         event(new Registered($user));
-        
-        return redirect(route('izy.admin', absolute: false));
+
+        // Login dell'utente
+        Auth::login($user);
+
+        // Forza la scrittura nel DB PRIMA del redirect
+        $request->session()->save();
+
+        /*
+        * utilizziamo Inertia::location per fare un redirect client-side
+        * in modo da evitare di dover fare un redirect server-side
+        * che comporterebbe il non aggiornamento dei valori
+        * passati al client tramite Inertia::share
+        * come ad esempio il nome dell'utente loggato
+        */
+        return Inertia::location(route('izy.admin'));
     }
-    
 }
