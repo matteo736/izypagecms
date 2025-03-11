@@ -5,10 +5,12 @@ import SetupLayout from "@/Layouts/SetupLayout";
 import { Button } from "@/components/ui/button";
 import LabelInput from "@/Components/labelInput";
 import UserRoles from '@types/auth/UserRoles';
+import { RegisterFormData } from "@types/FormTypes";
+
 
 function Register({ status, title, isFirstUser }:
     { status: string, title: string, isFirstUser: boolean }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<RegisterFormData>({
         username: '',
         email: '',
         password: '',
@@ -43,7 +45,9 @@ function Register({ status, title, isFirstUser }:
             <form onSubmit={submit}>
                 <ul className="my-2">
                     {fields.map((field): React.ReactNode => {
-                        return <LabelInput<Form> name={field.name} label={field.label} type={field.type} setData={setData} data={data} errors={errors} disabled={field.disabled} options={field.options} />
+                        return <LabelInput name={field.name} label={field.label} 
+                                type={field.type} setData={setData} value={data[field.name as keyof RegisterFormData]} 
+                                errors={errors} disabled={field.disabled} options={field.options} />
                     })}
                 </ul>
                 <Button type="submit" disabled={processing} variant="default" className="my-2 w-full lg:max-w-96">

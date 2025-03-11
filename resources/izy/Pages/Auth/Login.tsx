@@ -1,6 +1,6 @@
 import LabelInput from "../../Components/labelInput"
 import SetupLayout from "@/Layouts/SetupLayout"
-import { Field, Form } from '@types/FormTypes'
+import { Field, Form, LoginFormData } from '@types/FormTypes'
 import { useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Link } from "@inertiajs/react";
 
 function Login({ title, status, canResetPassword }: { title: string, status?: string, canResetPassword: boolean }) {
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, reset } = useForm<LoginFormData>({
     username: '',
     email: '',
     password: '',
@@ -33,7 +33,7 @@ function Login({ title, status, canResetPassword }: { title: string, status?: st
       <form onSubmit={submit}>
         <ul className="my-2">
           {fields.map((field): React.ReactNode => {
-            return <LabelInput<Form> name={field.name} label={field.label} type={field.type} setData={setData} data={data} errors={errors} />
+            return <LabelInput name={field.name} label={field.label} type={field.type} setData={setData} value={data[field.name as keyof LoginFormData]} errors={errors} />
           })}
         </ul>
         {canResetPassword && (

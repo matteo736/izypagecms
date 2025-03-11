@@ -2,7 +2,6 @@ import LabelInput from '@/Components/labelInput';
 import SetupLayout from "@/Layouts/SetupLayout";
 import { Button } from '@/components/ui/button';
 import { Head, useForm } from '@inertiajs/react';
-import { Password } from '@types/FormTypes';
 import { Field } from '@types/FormTypes';
 import { FormEventHandler } from 'react';
 
@@ -19,7 +18,7 @@ export default function ConfirmPassword() {
         });
     };
 
-    const passwordField: Field<keyof Password> = 
+    const passwordField: Field = 
         { label: "Confirm Password", name: "password", type: 'password' };
 
     return (
@@ -30,8 +29,8 @@ export default function ConfirmPassword() {
             </div>
 
             <form onSubmit={submit}>
-                <LabelInput<Password> label={passwordField.label} name={passwordField.name} 
-                    type={passwordField.type} data={data} setData={setData} errors={errors} />
+                <LabelInput label={passwordField.label} name={passwordField.name} 
+                    type={passwordField.type} value={data.password} setData={setData} errors={errors} />
                 <div className="mt-4 flex items-center justify-end">
                     <Button type="submit" disabled={processing} variant="default" className="my-2 w-full md:max-w-32">
                         Confirm

@@ -1,15 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/Components/ui/label";
+import { FormTypes } from "@types/FormTypes";
 import { HTMLInputTypeAttribute } from "react";
 
 interface LabelInputProps<T> {
   label: string;
   type: HTMLInputTypeAttribute;
   name: string;
-  data: T;
+  value: FormTypes;
   setData: (key: string, value: string) => void;
   options?: string[]; // Solo se type è "select"
-  errors: Partial<Record<keyof T, string>>;
+  errors: Partial<Record<string, string>>;
   disabled?: boolean;
 }
 
@@ -17,7 +18,7 @@ const LabelInput = <T,>({
   label,
   type,
   name,
-  data,
+  value,
   setData,
   options = [],
   errors,
@@ -31,7 +32,7 @@ const LabelInput = <T,>({
     "lg:w-full sm:min-w-96 min-w-64 border border-input rounded-md focus:border-primary focus:ring-primary focus:ring-1 mt-3";
 
   // Estrae il messaggio d'errore per la chiave corrente
-  const errorMessage = errors?.[name as keyof T];
+  const errorMessage = errors?.[name as string];
 
   return (
     <li className="flex flex-col py-2">
@@ -40,7 +41,7 @@ const LabelInput = <T,>({
         <select
           className={inputClassName}
           name={name}
-          value={data[name as keyof T] as string}
+          value={value}
           onChange={handleChange}
           disabled={disabled}
         >
@@ -55,7 +56,7 @@ const LabelInput = <T,>({
           className={inputClassName}
           type={type}
           name={name}
-          value={data[name as keyof T] as string}
+          value={value}
           onChange={handleChange}
           disabled={disabled}
         />
