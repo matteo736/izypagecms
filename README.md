@@ -1,4 +1,4 @@
-# [Nome CMS] - CMS Moderno con Laravel, Inertia e React
+# IzyPage - CMS Moderno con Laravel, Inertia e React
 
 [![Ultima versione stabile](https://img.shields.io/github/v/release/tuonome/tuo-cms)](https://packagist.org/packages/matteo736/izypagecms)
 [![Licenza](https://img.shields.io/github/license/matteo736/izypagecms)](LICENSE.md)
@@ -7,7 +7,7 @@
   <img src="public/images/cms-screenshot.png" alt="Screenshot CMS" width="800">
 </p>
 
-## Informazioni su [Nome CMS]
+## Informazioni su IzyPage
 
 Un CMS moderno e leggero sviluppato con Laravel, Inertia.js e React, pensato per competere con WordPress. **Attualmente in fase MVP** (Minimum Viable Product) con queste caratteristiche principali:
 - 🚀 Stack tecnologico moderno
