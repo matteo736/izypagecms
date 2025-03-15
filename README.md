@@ -54,8 +54,8 @@ Un CMS moderno e leggero sviluppato con Laravel, Inertia.js e React, pensato per
 - **Backend**: Laravel 10+
 - **Frontend**: React 18 + Inertia.js
 - **Database**: MySQL/PostgreSQL
-- **Auth**: Laravel Jetstream
-- **UI Kit**: Tailwind CSS + Headless UI
+- **Auth**: Laravel Breeze
+- **UI Kit**: Shadcn/UI
 
 ## Installazione
 
