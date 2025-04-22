@@ -15,18 +15,35 @@ const EditableElement = ({ type, content }: { type: keyof JSX.IntrinsicElements,
     // Restituisce un elemento dinamico basato su "type"
     const Element = type;
 
-    // console.log(type);
-
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Element 
-                        className={`border ${border} p-2 m-1 rounded-sm shadow-sm`} 
-                        onMouseEnter={() => setBorder('border-primary')} 
-                        onMouseLeave={() => setBorder('border-primary-foreground')} >
-                        {content}
-                    </Element>
+                    <div className='transform'>
+                        <Element
+                            className={`
+                                border 
+                                ${border}
+                                p-2 m-1 
+                                rounded-sm 
+                                shadow-sm 
+                                w-full
+                                bg-background
+                                cursor-move
+                                transform-none
+                                pointer-events-auto
+                                select-none
+                            `}
+                            style={{
+                                transform: 'translate3d(0, 0, 0)',
+                                WebkitTransform: 'translate3d(0, 0, 0)',
+                                touchAction: 'none'
+                            }}
+                            onMouseEnter={() => setBorder('border-primary')}
+                            onMouseLeave={() => setBorder('border-primary-foreground')} >
+                            {content}
+                        </Element>
+                    </div>
                 </TooltipTrigger>
                 <TooltipContent className='p-0'>
                     <Command>

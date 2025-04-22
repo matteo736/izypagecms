@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         // Creazione della tabella 'page_types' che memorizza i tipi di pagina
-        Schema::create('page_types', function (Blueprint $table) {
+        Schema::create('post_types', function (Blueprint $table) {
             $table->id(); // ID univoco
             $table->string('name'); // Nome del tipo di pagina (es. 'post', 'product', 'archive', etc.)
             $table->string('slug')->unique(); // Slug unico per il tipo di pagina
@@ -21,22 +21,22 @@ return new class extends Migration {
         });
 
         // Modifica della tabella 'pages' per aggiungere il riferimento al tipo di pagina
-        Schema::table('pages', function (Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
             // Aggiunge la colonna 'page_type_id' per legare la pagina al suo tipo
-            $table->foreignId('page_type_id')->constrained('page_types')->after('id');
+            $table->foreignId('post_type_id')->constrained('post_types')->after('id');
         });
     }
 
     public function down()
     {
         // Rimozione della colonna 'page_type_id' dalla tabella 'pages'
-        Schema::table('pages', function (Blueprint $table) {
-            $table->dropForeign(['page_type_id']); // Rimuove la chiave esterna
-            $table->dropColumn('page_type_id'); // Rimuove la colonna
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropForeign(['post_type_id']); // Rimuove la chiave esterna
+            $table->dropColumn('post_type_id'); // Rimuove la colonna
         });
 
         // Eliminazione della tabella 'page_types'
-        Schema::dropIfExists('page_types');
+        Schema::dropIfExists('post_types');
     }
 };
 

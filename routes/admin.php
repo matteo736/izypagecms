@@ -32,10 +32,30 @@ Route::middleware('guest')->group(function () {
 
 ////izy-administration
 Route::middleware('auth')->prefix('izyAdmin')->group(function () {
+    // prefisso per le rotte che riguardano le pagine
     Route::prefix('Pages')->group(function () {
+        // mostra tutte le pagine
         Route::get('/all', [PostsController::class, 'index'])
-        ->name('pages');
+            ->name('pages.all');
+
+        // mostra una pagina specifica
+        Route::get('/new', [PostsController::class, 'newsingle'])
+            ->name('page.new');
+
+        // rotta per la creazione di una nuova pagina
+        Route::post('create', [PostsController::class, 'store'])
+            ->name('page.create');
+
+        // mostra una pagina specifica
         Route::get('/{id}', [PostsController::class, 'single'])
-        ->name('page');
+            ->name('page.view');
+
+        // rotta per l'eliminazione di una pagina
+        Route::delete('delete/{id}', [PostsController::class, 'destroy'])
+            ->name('page.delete');
+
+        // rotta per l'aggiornamento di una pagina
+        Route::put('update/{id}', [PostsController::class, 'update'])
+            ->name('page.update');
     });
 });

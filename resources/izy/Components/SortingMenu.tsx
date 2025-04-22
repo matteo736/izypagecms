@@ -15,8 +15,8 @@ const sortingTypes = [
     {name: "Author"},
 ]
 
-function PagesSortingMenuButton({pages, setPages}: 
-    {pages: Page[], setPages: Dispatch<Page[]>}): JSX.Element {   
+function PagesSortingMenuButton({pages}: 
+    {pages: Page[]}): JSX.Element {   
     return (
         <Popover>
             <PopoverTrigger>

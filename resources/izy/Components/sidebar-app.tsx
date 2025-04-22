@@ -23,7 +23,7 @@ const items = [
   },
   {
     title: "Pages",
-    url: route('pages'),
+    url: route('pages.all'),
     icon: Notebook,
   },
   {

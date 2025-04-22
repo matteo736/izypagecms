@@ -10,6 +10,12 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class Setting extends Model
 {
     use HasFactory;
+    /**
+     * La tabella associata al modello.
+     *
+     * @var string
+     */
+    protected $table = 'settings';
 
     protected $fillable = ['key_name', 'value'];
 }

@@ -112,6 +112,10 @@ class DatabaseConfigService
 
     /**
      * Esegue le migrazioni iniziali se la tabella 'migrations' non esiste.
+     * 
+     * @throws \Exception
+     * @return void
+     * @throws \Throwable
      */
     public function runStartingIzyMigrations(): void
     {
@@ -210,6 +214,14 @@ class DatabaseConfigService
     public function runPermissionSeeder(): void
     {
         $this->runSeeder('PermissionSeeder');
+    }
+
+    /**
+     * Esegue il seeder dei permessi.
+     */
+    public function runPostTypeSeeder(): void
+    {
+        $this->runSeeder('PostTypeSeeder');
     }
 
     /**

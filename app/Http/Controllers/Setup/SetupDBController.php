@@ -80,6 +80,8 @@ class SetupDBController extends Controller
                 //seeder per inizializzare le tabelle dei ruoli e dei permessi
                 $this->databaseConfigService->runPermissionSeeder();
                 $this->databaseConfigService->runRoleSeeder();
+                $this->databaseConfigService->runPostTypeSeeder();
+                //--------------------------------------------------------------------------------
                 //salva il file di configurazione
                 ConfigFallbackService::save($validatedData);
                 //--------------------------------------------------------------------------------

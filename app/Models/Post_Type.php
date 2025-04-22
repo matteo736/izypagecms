@@ -8,7 +8,11 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 #[TypeScript]
 class Post_Type extends Model
 {
-    // Specifica il nome della tabella se non segue la convenzione (singolare del nome del modello in minuscolo e con "s")
+    /**
+     * La tabella associata al modello.
+     *
+     * @var string
+     */    
     protected $table = 'post_types';
 
     // I campi che possono essere assegnati in massa
@@ -31,4 +35,9 @@ class Post_Type extends Model
         // Presupponendo che "labels" sia un campo JSON che contiene un array di etichette
         'labels'            => 'array',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'post_type_id');
+    }
 }

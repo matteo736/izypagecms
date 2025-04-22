@@ -11,6 +11,11 @@ class Post extends Model
 {
     use HasFactory;
 
+    /**
+     * La tabella associata al modello.
+     *
+     * @var string
+     */
     protected $table = 'posts'; // Definiamo il nome della tabella
 
     // Definiamo i campi che possono essere assegnati in massa
@@ -40,5 +45,31 @@ class Post extends Model
     public function post_type()
     {
         return $this->belongsTo(Post_Type::class, 'post_type_id');
+    }
+
+    //------######-------Query Scopes--------#######------
+    /**
+     * Scope per i post pubblicati
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published');
+    }
+
+    /**
+     * Scope per i post di un certo tipo
+     */
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    /**
+     * Scope per i post più recenti
+     */
+    public function scopeRecent($query, int $limit = 5)
+    {
+        return $query->orderBy('created_at', 'desc')
+                    ->limit($limit);
     }
 }

@@ -8,16 +8,23 @@ import {
 } from "@/components/ui/card"
 import { Page } from "@types/content/pages/pagesType";
 import { Button } from "./ui/button";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { Skeleton } from "./ui/skeleton";
+import { useForm } from "@inertiajs/react";
+import { useCallback } from "react";
+import { toast } from "sonner";
+import { useMemo } from "react";
+
 
 interface CardPageProps {
-    page: Page; // Aggiungi eventuali proprietà personalizzate
+    page: Page; // Tipizzazione della pagina
+    destroy: () => void; // Funzione per eliminare la pagina
 }
 
-export const PageCard: React.FC<CardPageProps> = ({ page }) => {
+//Componente per la visualizzazione di una card di una pagina
+export const PageCard: React.FC<CardPageProps> = ({ page, destroy }) => {
     return (
-        <Card key={page.id} className="flex flex-col shadow-md">
+        <Card className="flex flex-col shadow-md">
             <div className="relative w-full h-48">
                 {!page.image && (
                     <Skeleton className="w-full h-full absolute top-0 left-0" />
@@ -36,10 +43,10 @@ export const PageCard: React.FC<CardPageProps> = ({ page }) => {
             </CardHeader>
             <CardContent className="flex-1 space-x-2 flex items-center">
                 <Button asChild>
-                    <Link href={route('page', { id: page.id })}>Modifica</Link>
+                    <Link href={route('page.view', { id: page.id })}>Modifica</Link>
                 </Button>
-                <Button asChild variant={'destructive'}>
-                    <Link href={route('page', { id: page.id })}>Elimina</Link>
+                <Button asChild variant={'destructive'} onClick={destroy} className="cursor-pointer">
+                    <p>Elimina</p>
                 </Button>
             </CardContent>
             <CardFooter>

@@ -2,112 +2,133 @@
 
 namespace App\Http\Controllers\Content\Posts;
 
-use Illuminate\Http\Request;
-use App\Models\Post;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Posts\PostRequest;
+use App\Services\PostService;
+use App\Models\Post;
 use Inertia\Inertia;
-use App\Models\Setting;
 
 class PostsController extends Controller
 {
-    public function show($slug)
-    {
-        $post = Post::where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
-    
-        $activeTheme = Setting::where('key_name', 'active_theme')->value('value') ?? 'izy-helloTheme';
-    
-        $themePath = 'Themes/' . $activeTheme . '/pageModels/';
-    
-        return match ($post->type) {
-            'post' => $this->renderContent($post, $themePath . 'SinglePageModel'),
-            'archive' => $this->renderContent($post, $themePath . 'ArchivePageModel'),
-            'page' => $this->renderContent($post, $themePath . 'StaticPageModel'),
-            default => $this->renderContent($post, $themePath . 'ErrorPageModel'),
-        };
-    }
-    
-    private function renderContent($page, $component)
-    {
-        return Inertia::render($component, ['page' => $page]);
-    }
-    
+    public function __construct(
+        private PostService $postService
+    ) {}
+
     /**
-     * Elenca tutte le pagine.
+     * Mostra la pagina di un post pubblicato.
+     *
+     * @param string $slug
+     * @return \Inertia\Response
+     */
+    public function show(string $slug)
+    {
+        $post = $this->postService->findPublishedBySlug($slug);
+        $activeTheme = $this->postService->getActiveTheme();
+        $themePath = 'Themes/' . $activeTheme . '/pageModels/';
+
+        return $this->renderContent($post, $this->getTemplateByType($post->type, $themePath));
+    }
+
+    /**
+     * Mostra tutti i post.
+     *
+     *
+     * @return \Inertia\Response
      */
     public function index()
     {
-        // Recupera tutte le pagine e carica il nome dell'autore
-        $pages = Post::with('author:id,name')->get();
-
         return Inertia::render('Content/AllPages', [
-            'pages' => $pages,
+            'pages' => Post::with('author:id,name')->get()
         ]);
     }
 
     /**
-     * Mostra una singola pagina.
+     * Mostra la pagina di un post specifico.
+     *
+     * @param int $id
+     * @return \Inertia\Response
      */
-    public function single($id)
+    public function single(int $id)
     {
-        $page = Post::findOrFail($id); // Recupera una pagina per ID
         return Inertia::render('Content/SinglePageEditor', [
-            'page' => $page,
+            'pageProp' => Post::findOrFail($id)
         ]);
     }
 
     /**
-     * Salva una nuova pagina.
+     * Mostra la pagina per creare un nuovo post.
+     *
+     * @return \Inertia\Response
      */
-    public function store(Request $request)
+    public function newsingle()
     {
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'layout' => 'required|array', // Deve essere un array (il JSON della pagina)
+        return Inertia::render('Content/SinglePageEditor', [
+            'pageProp' => $this->postService->getEmptyPost()
         ]);
-
-        $page = Post::create([
-            'title' => $data['title'],
-            'content' => json_encode($data['layout']), // Salva il layout come JSON
-        ]);
-
-        return response()->json(['message' => 'Pagina creata con successo!', 'page' => $page]);
     }
 
     /**
-     * Aggiorna una pagina esistente.
+     * Mostra la pagina per creare un nuovo post.
+     *
+     * @param int $id
+     * @return \Inertia\Response
      */
-    public function update(Request $request, $id)
+    public function store(PostRequest $request)
     {
-        $page = Post::findOrFail($id);
-
-        $data = $request->validate([
-            'title' => 'sometimes|string|max:255',
-            'layout' => 'sometimes|array', // Deve essere un array se fornito
-        ]);
-
-        if (isset($data['title'])) {
-            $page->title = $data['title'];
-        }
-
-        if (isset($data['layout'])) {
-            $page->content = json_encode($data['layout']);
-        }
-
-        $page->save();
-
-        return response()->json(['message' => 'Pagina aggiornata con successo!', 'page' => $page]);
+        $this->postService->createPost($request->validated());
+        return redirect()->back()->with('message', 'Pagina creata con successo!');
     }
 
     /**
-     * Elimina una pagina.
+     * Mostra la pagina per modificare un post esistente.
+     *
+     * @param Post $post
+     * @return \Inertia\Response
      */
-    public function destroy($id)
+    public function update(PostRequest $request, Post $post)
     {
-        $page = Post::findOrFail($id);
-        $page->delete();
+        $this->postService->updatePost($post, $request->validated());
+        return redirect()->back()->with('message', 'Pagina aggiornata con successo!');
+    }
 
-        return response()->json(['message' => 'Pagina eliminata con successo!']);
+    /**
+     * Mostra la pagina per eliminare un post esistente.
+     *
+     * @param Post $post
+     * @return \Inertia\Response
+     */
+    public function destroy(Post $post)
+    {
+        $post->delete();
+        return redirect()->route('pages.all')->with('message', 'Pagina eliminata con successo!');
+    }
+
+    /**
+     * Associa il tipo di post al template corretto.
+     *
+     * @param string $type
+     * @param string $themePath
+     * @return string
+     */
+    private function getTemplateByType(string $type, string $themePath): string
+    {
+        return $themePath . match ($type) {
+            'post' => 'SinglePageModel',
+            'archive' => 'ArchivePageModel',
+            'page' => 'StaticPageModel',
+            default => 'ErrorPageModel',
+        };
+    }
+
+    /**
+     * Renderizza il contenuto della pagina.
+     *
+     * @param Post $page
+     * @param string $component
+     * @return \Inertia\Response
+     */
+    private function renderContent($page, $component)
+    {
+        return Inertia::render($component, ['page' => $page]);
     }
 }
