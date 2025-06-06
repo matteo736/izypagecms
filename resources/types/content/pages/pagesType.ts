@@ -1,3 +1,5 @@
+import { Model } from "@types/global";
+
 export interface Author {
     id: number;
     name: string;
@@ -16,7 +18,7 @@ export interface Content {
 }
 
 // Definisci un tipo più generico per i post
-export interface Post {
+export interface Post extends Model {
     id: number;
     image: string;
     title: string;

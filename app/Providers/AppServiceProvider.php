@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use App\Services\DatabaseConfigService;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {

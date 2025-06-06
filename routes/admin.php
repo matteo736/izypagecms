@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Setup\SetupDBController;
 use App\Http\Controllers\Content\Posts\PostsController;
-
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,12 +39,12 @@ Route::middleware('auth')->prefix('izyAdmin')->group(function () {
             ->name('pages.all');
 
         // mostra una pagina specifica
-        Route::get('/new', [PostsController::class, 'newsingle'])
+        Route::get('/new', [PostsController::class, 'newSinglePage'])
             ->name('page.new');
 
         // rotta per la creazione di una nuova pagina
-        Route::post('create', [PostsController::class, 'store'])
-            ->name('page.create');
+        Route::post('store', [PostsController::class, 'store'])
+            ->name('page.store');
 
         // mostra una pagina specifica
         Route::get('/{id}', [PostsController::class, 'single'])
@@ -59,3 +59,4 @@ Route::middleware('auth')->prefix('izyAdmin')->group(function () {
             ->name('page.update');
     });
 });
+

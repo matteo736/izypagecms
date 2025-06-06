@@ -9,10 +9,13 @@ import { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
 import { PageProps } from '@types/index';
 import { toast } from 'sonner';
+import Cookies from 'js-cookie';
+import { useLocalStorage } from 'usehooks-ts';
 
 interface MainIzpLayoutProps {
     title: string;
 }
+
 //Layout principale della pagina
 //permette di gestire il sidebar,
 //il layout principale della pagina,
@@ -20,6 +23,10 @@ interface MainIzpLayoutProps {
 //e il toaster
 export default function MainIzpLayout({ children, title }: PropsWithChildren<MainIzpLayoutProps>) {
     const { flash } = usePage<PageProps>().props;
+    // otteniamo il valore di apertura della sidebar da un cookie di shadcn
+    // e in base a questo valore, decidiamo se aprire o meno la sidebar
+    // tra i rernder
+    const defaultOpen = Cookies.get("sidebar:state") === "true";
     // Effetto per mostrare i toast quando cambiano i flash messages
     useEffect(() => {
         if (flash.message) {
@@ -29,8 +36,10 @@ export default function MainIzpLayout({ children, title }: PropsWithChildren<Mai
             toast.error(flash.error); // Mostra il messaggio di errore
         }
     }, [flash]);
+    // stato del tema
+    const [theme] = useLocalStorage<'light' | 'dark'>('theme', 'light');
     return (
-        <SidebarProvider defaultOpen={false} >
+        <SidebarProvider defaultOpen={defaultOpen} id='dashboard' className={theme === 'dark' ? 'dark' : ''} >
             <AppSidebar />
             <BridgeLayout>
                 <Head title={title} />
@@ -54,9 +63,9 @@ function BridgeLayout({ children }: PropsWithChildren): ReactElement {
     }, [isMobile]);
     return (
         <main className={openDashboard || openMobile ? 'transition-all duration-300' : 'w-full'} style={openDashboard || openMobile ? { width: `calc(100% - ${SIDEBAR_WIDTH})` } : {}}>
-            <SidebarTrigger className='fixed z-50'/>
+            <SidebarTrigger className='fixed z-50 text-primary mt-[6px]' />
             <div className="flex flex-col min-h-screen bg-background items-center pt-0">
-                <TopBar className={'fixed z-40'}/>
+                <TopBar className={'fixed z-40'} />
                 {children}
             </div>
         </main>

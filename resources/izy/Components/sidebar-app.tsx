@@ -12,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/Components/ui/sidebar"
 import { Link } from "@inertiajs/react"
-import { Button } from "./ui/button"
+
 
 // Menu items.
 const items = [
@@ -43,10 +43,10 @@ const items = [
   },
 ]
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   return (
     <Sidebar variant="sidebar" collapsible="icon" className="z-50" >
-      <SidebarContent>
+      <SidebarContent className="bg-secondary">
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -54,7 +54,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link href={item.url} as="button">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -65,13 +65,13 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-secondary">
         <SidebarContent>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem key={'logout'}>
                 <SidebarMenuButton asChild variant="destructive" size="sm" >
-                  <Link href={route('logout')} method="post">
+                  <Link href={route('logout')} method="post" as="button">
                     <User />
                     <span>Logout</span>
                   </Link>
@@ -83,5 +83,4 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   )
-}
-
+};

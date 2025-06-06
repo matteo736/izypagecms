@@ -25,6 +25,7 @@ class PostRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'layout' => 'required|array', // Deve essere un array (il JSON della pagina)
+            'postTypeId' => 'nullable|int|exists:post_types,id',// ID del tipo di post che puo essere null perche se aggiorniamo un post esistente non lo modifichiamo
         ];
     }
 }

@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Posts\PostRequest;
 use App\Services\PostService;
 use App\Models\Post;
+use App\Models\Post_Type;
 use Inertia\Inertia;
+
+use function Illuminate\Log\log;
 
 class PostsController extends Controller
 {
@@ -38,7 +41,7 @@ class PostsController extends Controller
     public function index()
     {
         return Inertia::render('Content/AllPages', [
-            'pages' => Post::with('author:id,name')->get()
+            'pages' => Post::with('author:id,name')->get(),
         ]);
     }
 
@@ -51,7 +54,7 @@ class PostsController extends Controller
     public function single(int $id)
     {
         return Inertia::render('Content/SinglePageEditor', [
-            'pageProp' => Post::findOrFail($id)
+            'pageProp' => Post::findOrFail($id),
         ]);
     }
 
@@ -60,10 +63,11 @@ class PostsController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function newsingle()
+    public function newSinglePage()
     {
         return Inertia::render('Content/SinglePageEditor', [
-            'pageProp' => $this->postService->getEmptyPost()
+            'pageProp' => $this->postService->getEmptyPost(),
+            'postTypeId' => Post_Type::where('slug', 'page')->first()->id
         ]);
     }
 
@@ -85,20 +89,21 @@ class PostsController extends Controller
      * @param Post $post
      * @return \Inertia\Response
      */
-    public function update(PostRequest $request, Post $post)
+    public function update(PostRequest $request, int $id)
     {
+        $post = Post::findOrFail($id);
         $this->postService->updatePost($post, $request->validated());
         return redirect()->back()->with('message', 'Pagina aggiornata con successo!');
     }
-
     /**
      * Mostra la pagina per eliminare un post esistente.
      *
      * @param Post $post
      * @return \Inertia\Response
      */
-    public function destroy(Post $post)
+    public function destroy(int $id)
     {
+        $post = Post::findOrFail($id);
         $post->delete();
         return redirect()->route('pages.all')->with('message', 'Pagina eliminata con successo!');
     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { Page } from '@types/content/pages/pagesType';
 import { PageProps } from '@types/index';
 import { PageCard } from '@/Components/contentCards';
@@ -8,13 +8,23 @@ import PagesSortingMenuButton from '@/Components/SortingMenu';
 import { Plus } from 'lucide-react';
 import { useForm } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
-import { toast } from 'sonner';
+import { router } from '@inertiajs/react';
 
 interface AllPagesProps extends PageProps {
     pages: Page[]; // Aggiungi eventuali proprietà personalizzate
 }
 
 const AllPages: React.FC<AllPagesProps> = ({ pages }) => {
+    // utilizziamo il contesto per gestire il reload
+    // e per eliminare l'event listener
+    // quando il componente viene smontato
+    useLayoutEffect(() => {
+        router.on('navigate', () => {
+            // Ricarica il prop 'pages' (lista) quando si visita la pagina
+            router.reload({ only: ['pages'] });
+        });
+    }
+    , []);
     // utilizziamo useForm di Inertia per gestire la cancellazione
     // delle pagine. In questo caso, non abbiamo bisogno di un form
     // ma usiamo questo hook per sfruttare
@@ -32,8 +42,6 @@ const AllPages: React.FC<AllPagesProps> = ({ pages }) => {
         if (confirm('Sei sicuro di voler eliminare questa pagina?')) {
             destroy(route('page.delete', { id: pageId }), {
                 preserveScroll: true,
-                onSuccess: () => toast.success('Pagina eliminata con successo'),
-                onError: () => toast.error('Errore durante l\'eliminazione')
             });
         }
     };
@@ -71,6 +79,7 @@ const AllPages: React.FC<AllPagesProps> = ({ pages }) => {
                 )}
             </div>
         </MainIzpLayout>
+
     );
 };
 

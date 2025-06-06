@@ -13,6 +13,7 @@ import {
 } from '@dnd-kit/sortable'
 import { SortableBlock } from './SortableBlock'
 import EditableElement from '../editableElement'
+import { EditorBlock } from '@types/editor/editorTypes';
 
 // Funzione per spostare un elemento in un array
 // Questa funzione prende un array, un indice vecchio e un nuovo indice
@@ -29,7 +30,8 @@ function arrayMove(array: any[], oldIndex: number, newIndex: number): any[] {
 
 // Componente principale
 export default function DraggableEditor({ items, setItems }:
-    { items: any[], setItems: (items: any) => void }) {
+    { items: EditorBlock[], setItems: (items: EditorBlock[]) => void }):
+    JSX.Element {
     // Sensori per input diversi
     const sensors = useSensors(
         // Sensore per il puntatore (mouse o touch)
@@ -49,15 +51,16 @@ export default function DraggableEditor({ items, setItems }:
     // Questa funzione viene chiamata quando il drag termina
     // Prende come argomenti l'elemento attivo e l'elemento di destinazione
     // Se non c'è una destinazione, non fa nulla
+    // Se l'elemento attivo è lo stesso della destinazione, non fa nulla
     // Altrimenti, sposta l'elemento attivo nella nuova posizione
     // Utilizza la funzione arrayMove per spostare l'elemento
     // e aggiorna lo stato con il nuovo array
     const handleDragEnd = ({ active, over }: { active: any, over: any }) => {
         if (!over) return; // se non c'è una destinazione, non fare nulla
+        if (active.id === over.id) return; // se l'elemento attivo è lo stesso della destinazione, non fare nulla
         const orderedItems = arrayMove(items, active.id, over.id);
-        setItems(orderedItems);
+        setItems(orderedItems) // aggiorna lo stato Redux con il nuovo array;
     };
-
     return (
         /* DndContext è il contesto principale per il drag and drop
             * collisionDetection è la funzione che determina se un elemento
@@ -77,13 +80,13 @@ export default function DraggableEditor({ items, setItems }:
                 items={items}
                 strategy={verticalListSortingStrategy}
             >
-                    {/* Mappiamo gli elementi e creiamo un SortableBlock per ognuno di essi
+                {/* Mappiamo gli elementi e creiamo un SortableBlock per ognuno di essi
                     * Ogni SortableBlock ha una chiave unica (id) e un elemento Editabile
                     * Ogni elemento Editabile ha un tipo e un contenuto
                     */}
                 {items.map(item => (
                     <SortableBlock key={item.id} id={item.id}>
-                        <EditableElement type={item.type} content={item.content} />
+                        <EditableElement id={item.id} type={item.type} content={item.content} />
                     </SortableBlock>
                 ))}
             </SortableContext>

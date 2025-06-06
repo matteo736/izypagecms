@@ -8,13 +8,8 @@ import {
 } from "@/components/ui/card"
 import { Page } from "@types/content/pages/pagesType";
 import { Button } from "./ui/button";
-import { Link, router } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { Skeleton } from "./ui/skeleton";
-import { useForm } from "@inertiajs/react";
-import { useCallback } from "react";
-import { toast } from "sonner";
-import { useMemo } from "react";
-
 
 interface CardPageProps {
     page: Page; // Tipizzazione della pagina
@@ -24,8 +19,8 @@ interface CardPageProps {
 //Componente per la visualizzazione di una card di una pagina
 export const PageCard: React.FC<CardPageProps> = ({ page, destroy }) => {
     return (
-        <Card className="flex flex-col shadow-md">
-            <div className="relative w-full h-48">
+        <Card className="flex flex-col shadow-md h-[23rem]">
+            <div className="relative w-full min-h-40">
                 {!page.image && (
                     <Skeleton className="w-full h-full absolute top-0 left-0" />
                 )}
@@ -35,8 +30,8 @@ export const PageCard: React.FC<CardPageProps> = ({ page, destroy }) => {
                 />
             </div>
             <CardHeader className="flex flex-col divide-y-2">
-                <CardTitle>{page.title}</CardTitle>
-                <CardDescription>
+                <CardTitle className="truncate h-[1.7rem]">{page.title}</CardTitle>
+                <CardDescription className="truncate">
                     <strong> Status:</strong> {page.status} |
                     <strong> Author:</strong> {page.author.name}
                 </CardDescription>
@@ -50,7 +45,7 @@ export const PageCard: React.FC<CardPageProps> = ({ page, destroy }) => {
                 </Button>
             </CardContent>
             <CardFooter>
-                <p className="text-muted-foreground">Data di Modifica</p>
+                <p className="text-muted-foreground">Ultima Modifica: {page.updated_at.slice(0,10)}</p>
             </CardFooter>
         </Card>
     );
