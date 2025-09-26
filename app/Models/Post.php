@@ -47,7 +47,6 @@ class Post extends Model
         return $this->belongsTo(Post_Type::class, 'post_type_id');
     }
 
-    //------######-------Query Scopes--------#######------
     /**
      * Scope per i post pubblicati
      */

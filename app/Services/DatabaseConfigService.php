@@ -28,7 +28,7 @@ class DatabaseConfigService
     }
 
     /**
-     * Testa la connessione al database.
+     * Testa la connessione al database tramite PDO.
      *
      * @return bool
      */
@@ -70,8 +70,8 @@ class DatabaseConfigService
     public function connectConfig(): void
     {
         $dbType = $this->config['dbType'];
-        config()->set('database.default', $dbType);
-        config()->set("database.connections.{$dbType}", $this->buildConnectionConfig());
+        config()->set('database.default', $dbType); // inserisce come connessione di default il nuovo driver
+        config()->set("database.connections.{$dbType}", $this->buildConnectionConfig()); // inserisce come configurazione la configurazione attuale del servizio
 
         // Purga e riconnetti
         DB::purge($dbType);
@@ -111,7 +111,7 @@ class DatabaseConfigService
     }
 
     /**
-     * Esegue le migrazioni iniziali se la tabella 'migrations' non esiste.
+     * Esegue le migrazioni iniziali se necessario.
      * 
      * @throws \Exception
      * @return void
@@ -120,7 +120,9 @@ class DatabaseConfigService
     public function runStartingIzyMigrations(): void
     {
         $connection = $this->config['dbType'];
-        if (!Schema::connection($connection)->hasTable('migrations')) {
+        // controlla che esista la tabella migrations perchè la prima volta che vengono eseguite su un db
+        // viene creata in automatico, perciò se è gia stato fatto non serve fare le migrazioni iniziali
+        if (!Schema::connection($connection)->hasTable('migrations')) { 
             try {
                 DB::connection($connection)->beginTransaction();
                 Artisan::call('migrate:fresh', ['--database' => $connection, '--force' => true]);
@@ -134,64 +136,78 @@ class DatabaseConfigService
     }
 
     /**
-     * Migra la sessione attiva dal vecchio database al nuovo.
+     * Migra la sessione attiva dal vecchio database al nuovo controllando che la migrazioni sia possibile.
      *
      * @param string $oldConnection
      * @param string $oldDbName
-     * @param mixed $sessionId
+     * @param string $sessionId
      *
      * @throws \Exception
      */
-    public function migrateActiveSession(string $oldConnection, string $oldDbName, $sessionId): void
+    public function migrateActiveSession(string $oldConnection, string $oldDbName, string $sessionId): void
     {
-        if ($oldDbName === $this->config['dbName']) {
-            Log::info('Il nome del nuovo e del vecchio database è uguale, non serve migrare le sessioni.');
+        // controllo di casi di errore o in cui le migrazioni non siano necessarie
+        if ($this->isSameDatabase($oldDbName)) {
+            Log::info('Database vecchio e nuovo coincidono, migrazione sessioni non necessaria.');
             return;
         }
-
+        if (!$this->canConnect($oldConnection) || !$this->canConnect($this->config['dbType'])) {
+            Log::error('Connessione al database non attiva. Migrazione impossibile.');
+            return;
+        }
         try {
-            if (!$this->areConnectionsActive($oldConnection, $this->config['dbType'])) {
-                Log::error('Una delle connessioni al database non è attiva. Impossibile migrare la sessione.');
+            $activeSession = $this->fetchSession($oldConnection, $sessionId);
+            // controllo che esista la sessione da migrare
+            if (!$activeSession) {
+                Log::info('Nessuna sessione trovata nel vecchio database.');
                 return;
             }
-
-            $activeSession = DB::connection($oldConnection)
-                ->table('sessions')
-                ->where('id', $sessionId)
-                ->first();
-
-            if ($activeSession) {
-                DB::connection($this->config['dbType'])
-                    ->table('sessions')
-                    ->insert((array) $activeSession);
-                Log::info('Migrazione della sessione attiva completata con successo.');
-            } else {
-                Log::info('Nessuna sessione attiva trovata nel vecchio database.');
-            }
+            $this->insertSession($this->config['dbType'], $activeSession);
+            Log::info('Migrazione della sessione attiva completata con successo.');
         } catch (\Exception $e) {
-            Log::error('Errore durante la migrazione della sessione attiva: ' . $e->getMessage());
+            Log::error('Errore durante la migrazione della sessione: ' . $e->getMessage());
             throw $e;
         }
     }
 
+    private function isSameDatabase(string $oldDbName): bool
+    {
+        return $oldDbName === $this->config['dbName'];
+    }
+
+    // recupera la sessione con id == sessionId nella tabella 'sessions'
+    private function fetchSession(string $connection, string $sessionId): ?object
+    {
+        return DB::connection($connection)
+            ->table('sessions')
+            ->where('id', $sessionId)
+            ->first();
+    }
+
+    private function insertSession(string $connection, object $session): void
+    {
+        DB::connection($connection)
+            ->table('sessions')
+            ->insert((array) $session);
+    }
+
     /**
-     * Verifica se entrambe le connessioni sono attive.
+     * Verifica se una singola connessione al database è raggiungibile.
      *
-     * @param string $connectionA
-     * @param string $connectionB
-     *
+     * @param string $connection
      * @return bool
      */
-    protected function areConnectionsActive(string $connectionA, string $connectionB): bool
+    private function canConnect(string $connection): bool
     {
         try {
-            DB::connection($connectionA)->getPdo();
-            DB::connection($connectionB)->getPdo();
+            DB::connection($connection)->getPdo();
             return true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            Log::warning("Impossibile connettersi a [$connection]: " . $e->getMessage());
             return false;
         }
     }
+
 
     /**
      * Esegue un seeder specifico.

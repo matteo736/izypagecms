@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Setup;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\Setup\SetDatabaseConfigRequest;
 use Inertia\Response;
 use Inertia\Inertia;
 use App\Services\ConfigFallbackService;
@@ -40,12 +41,69 @@ class SetupDBController extends Controller
     }
 
     /**
-     * Imposta la configurazione del database
+     * Esegue i seeder per inizializzare il db.
+     *
+     * @param null
+     * @return void
+     */
+    private function seedDefault(): void
+    {
+        $this->databaseConfigService->runPermissionSeeder();
+        $this->databaseConfigService->runRoleSeeder();
+        $this->databaseConfigService->runPostTypeSeeder();
+    }
+
+    /**
+     * Esegue il redirect dopo il setup del db.
+     *
+     * @param null
+     * @return Response
+     */
+    private function redirectAfterSetup()
+    {
+        return User::count() == 0
+            ? redirect()->route('register', ['isFirstUser' => true])
+            : redirect()->route('izy.admin');
+    }
+
+    /**
+     * Inizializza il db.
+     *
+     * @param array $validatedData
+     * @param string $oldConfigDriver
+     * @param string $oldDbName
+     * @param string $sessionId
+     * @return void
+     */
+    private function initializeDatabase(
+        array $validatedData,
+        string $oldConfigDriver,
+        string $oldDbName,
+        string $sessionId
+    ): void {
+        try {
+            $this->databaseConfigService->connectConfig();
+            $this->databaseConfigService->runStartingIzyMigrations();
+            $this->databaseConfigService->migrateActiveSession($oldConfigDriver, $oldDbName, $sessionId);
+
+            $this->seedDefault();
+
+            ConfigFallbackService::save($validatedData);
+            $this->databaseConfigService->setConfigCacheDbInit();
+        } catch (\Throwable $e) {
+            Log::channel('stack')->debug('Errore durante l’inizializzazione del DB', ['data' => $e->getMessage()]);
+            throw $e; // rilancio l'eccezione, così il controller può gestire il redirect con errore
+        }
+    }
+
+
+    /**
+     * Imposta la configurazione del database.
      *
      * @param Request $request
      * @return Response
      */
-    public function setconfig(Request $request)
+    public function setconfig(SetDatabaseConfigRequest $request)
     {
         // recupero del driver e il nome della configurazione corrente
         $oldConfigDriver = config('database.default');
@@ -53,60 +111,19 @@ class SetupDBController extends Controller
         // Recupera l'ID della sessione attiva prima di cambiare la configurazione del database
         $sessionId = session()->getId();
         // Validazione dei dati
-        $validatedData = $request->validate([
-            'dbType' => 'required|string',
-            'host' => 'required|string',
-            'dbName' => 'required|string',
-            'port' => 'required|integer',
-            'username' => 'required|string',
-            'password' => 'nullable|string',
-            'initialized' => 'required|boolean'
-        ]);
+        $validatedData = $request->validated();
 
-        // Aggiorna i dati per la connessione al database
+        // Aggiorna i dati per la connessione al database nel servizio
         $this->databaseConfigService->updateData($validatedData);
 
-        try {
-            // Controlla la connessione al database
-            if ($this->databaseConfigService->testConnection()) {
-                // Connessione al database riuscita
-                //--------------------------------------------------------------------------------
-                //setta la connessione al nuovo db per questa richiesta
-                $this->databaseConfigService->connectConfig();
-                // Fai partire le migrazioni iniziali se necessario
-                $this->databaseConfigService->runStartingIzyMigrations();
-                // migra i dati delle vecchie sessioni salvate sulla vecchia connessione
-                $this->databaseConfigService->migrateActiveSession($oldConfigDriver, $oldDbName, $sessionId);
-                //seeder per inizializzare le tabelle dei ruoli e dei permessi
-                $this->databaseConfigService->runPermissionSeeder();
-                $this->databaseConfigService->runRoleSeeder();
-                $this->databaseConfigService->runPostTypeSeeder();
-                //--------------------------------------------------------------------------------
-                //salva il file di configurazione
-                ConfigFallbackService::save($validatedData);
-                //--------------------------------------------------------------------------------
-                /*
-                 * viene usata la cache per evitare di creare race condition tra le richieste
-                 * di scrittura nel file di configurazione izy-fallback
-                 */
-                $this->databaseConfigService->setConfigCacheDbInit();
-                /*
-                 * se la tabella degli utenti è vuota reindirizza alla registrazione
-                 * altrimenti reindirizza alla dashboard
-                 */
-                if (User::count() == 0) {
-                    // Reindirizza alla rotta 'register' se non ci sono utenti
-                    return redirect()->route('register', ['isFirstUser' => true]);
-                } else {
-                    // Reindirizza alla rotta 'izyAdmin'
-                    return redirect()->route('izy.admin');
-                }
-            } else {
-                // Passa il messaggio di errore e rimanda alla rotta precedente
-                return redirect()->back()->with('error', 'Connessione al database fallita. Riprova.');
-            }
-        } catch (\Exception $e) {
-            Log::channel('stack')->debug('Detailed debug', ['data' => $e->getMessage()]);
+        if (!$this->databaseConfigService->testConnection()) {
+            return redirect()->back()->with('error', 'Connessione al database fallita. Riprova.');
         }
+
+        // Step 1: prepara il DB
+        $this->initializeDatabase($validatedData, $oldConfigDriver, $oldDbName, $sessionId);
+
+        // Step 2: decidi il redirect
+        return $this->redirectAfterSetup();
     }
 }

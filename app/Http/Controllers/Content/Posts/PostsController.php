@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Content\Posts;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Posts\PostRequest;
+use App\Http\Requests\Posts\CreatePostRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Services\PostService;
 use App\Models\Post;
 use App\Models\Post_Type;
 use Inertia\Inertia;
+use Illuminate\Http\RedirectResponse;
 
-use function Illuminate\Log\log;
 
 class PostsController extends Controller
 {
@@ -46,64 +48,97 @@ class PostsController extends Controller
     }
 
     /**
-     * Mostra la pagina di un post specifico.
+     * Crea una bozza iniziale di post (contenuto editor baseline) e reindirizza la UI
+     * all’editor della pagina appena generata. Richiede che l’utente corrente sia
+     * autorizzato alla creazione di Post.
      *
-     * @param int $id
-     * @return \Inertia\Response
+     * @param CreatePostRequest $request Richiesta HTTP contenente l’utente autenticato.
+     * @return RedirectResponse Reindirizzamento verso la route dell’editor con l’ID della bozza.
      */
-    public function single(int $id)
+    public function createAndRedirect(Request $request): RedirectResponse
     {
+        $user = $request->user();
+
+        if (!$user->can('create', Post::class)) {
+            return redirect()->back()->with('error', 'Non autorizzato a creare post');
+        }
+
+        $nextId = (Post::max('id') ?? 0) + 1;
+
+        $post = $this->postService->createDraftPost([
+            'title' => 'Nuovo Post #' . $nextId,
+            'content' => [
+                'sections' => [
+                    ['id' => 0, 'type' => 'p', 'content' => 'scrivi qui...'],
+                ],
+            ],
+            'author_id' => $user->id,
+            'post_type_id' => Post_Type::where('slug', 'page')->value('id'),
+        ]);
+
+        return redirect()->route('page.view', ['id' => $post->id]);
+    }
+
+    /**
+     * Gestisce la creazione/modifica di un post.
+     * Se l'ID esiste, carica il post esistente.
+     * Se l'ID non esiste, crea un post temporaneo nel DB e reindirizza con il nuovo ID.
+     *
+     * @param Request $request
+     * @param int|null $id
+     * @return \Inertia\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function single(Request $request, int $id)
+    {
+        $user = $request->user();
+        $post = Post::findOrFail($id);
+
+        // Controlla permessi per modificare
+        if (!$user->can('edit', Post::class)) {
+            return redirect()->back()->with('error', 'Non autorizzato a modificare questo post');
+        }
+
         return Inertia::render('Content/SinglePageEditor', [
-            'pageProp' => Post::findOrFail($id),
+            'pageProp' => $post,
+            'postTypeId' => $post->post_type_id
         ]);
     }
 
     /**
-     * Mostra la pagina per creare un nuovo post.
-     *
-     * @return \Inertia\Response
-     */
-    public function newSinglePage()
-    {
-        return Inertia::render('Content/SinglePageEditor', [
-            'pageProp' => $this->postService->getEmptyPost(),
-            'postTypeId' => Post_Type::where('slug', 'page')->first()->id
-        ]);
-    }
-
-    /**
-     * Mostra la pagina per creare un nuovo post.
-     *
-     * @param int $id
-     * @return \Inertia\Response
-     */
-    public function store(PostRequest $request)
-    {
-        $this->postService->createPost($request->validated());
-        return redirect()->back()->with('message', 'Pagina creata con successo!');
-    }
-
-    /**
-     * Mostra la pagina per modificare un post esistente.
+     * Funzione per modificare un post esistente.
      *
      * @param Post $post
+     * @param UpdatePostRequest $request
      * @return \Inertia\Response
      */
-    public function update(PostRequest $request, int $id)
+    public function update(UpdatePostRequest $request, int $id)
     {
+        $user = $request->user();
+        $validatedData = $request->validated();
+
+        // Usa il permesso definito in PostPolicy
+        if (!$user->can('edit', Post::class)) {
+            return redirect()->back()->with('message', 'Utente non autorizzato a modificare Post');
+        }
+
         $post = Post::findOrFail($id);
-        $this->postService->updatePost($post, $request->validated());
-        return redirect()->back()->with('message', 'Pagina aggiornata con successo!');
+        $this->postService->updatePost($post, $validatedData);
+        return redirect()->back()->with('message', $validatedData['title'] . ' aggiornata con successo!');
     }
     /**
-     * Mostra la pagina per eliminare un post esistente.
+     * Elimina un post esistente.
      *
      * @param Post $post
+     * @param Request $request
      * @return \Inertia\Response
      */
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
+        $user = $request->user();
         $post = Post::findOrFail($id);
+        if (!$user->can('delete', Post::class)) {
+            return redirect()->back()->with('message', 'Utente non autorizzato a eliminare Post');
+        }
         $post->delete();
         return redirect()->route('pages.all')->with('message', 'Pagina eliminata con successo!');
     }

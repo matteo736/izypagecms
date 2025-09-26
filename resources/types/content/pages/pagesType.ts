@@ -1,20 +1,26 @@
 import { Model } from "@types/global";
 
+export interface Section {
+    id: number;
+    type: keyof JSX.IntrinsicElements;
+    content: string;
+    settings?: Record<string, any>;
+}
+
 export interface Author {
     id: number;
     name: string;
     // Altri campi relativi all'autore
 }
 
-export interface Section {
-    id: number;
-    title: string;
-    content: string;
-    // Altri campi relativi alla sezione
-}
-
 export interface Content {
     sections: Section[];
+}
+
+export enum Status {
+    Draft = "draft",
+    Published = "published",
+    Trashed = "trashed"
 }
 
 // Definisci un tipo più generico per i post
@@ -22,8 +28,8 @@ export interface Post extends Model {
     id: number;
     image: string;
     title: string;
-    content: string;
-    status: 'draft' | 'published';
+    content?: { sections?: Section[] };
+    status: Status;
     author: Author;
     author_id: number;
     meta_description: null | string;

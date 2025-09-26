@@ -35,27 +35,26 @@ Route::middleware('auth')->prefix('izyAdmin')->group(function () {
     // prefisso per le rotte che riguardano le pagine
     Route::prefix('Pages')->group(function () {
         // mostra tutte le pagine
-        Route::get('/all', [PostsController::class, 'index'])
+        Route::get('all', [PostsController::class, 'index'])
             ->name('pages.all');
 
-        // mostra una pagina specifica
-        Route::get('/new', [PostsController::class, 'newSinglePage'])
-            ->name('page.new');
+        // crea una nuova pagina e ti reindirizza in automatico all'editor
+        Route::post('create', [PostsController::class, 'createAndRedirect'])
+            ->name('page.create');
 
-        // rotta per la creazione di una nuova pagina
-        Route::post('store', [PostsController::class, 'store'])
-            ->name('page.store');
-
-        // mostra una pagina specifica
-        Route::get('/{id}', [PostsController::class, 'single'])
+        // mostra una pagina specifica o ne crea una in assenza di ID (richiesta di create)
+        Route::get('{id}', [PostsController::class, 'single'])
+            ->whereNumber('id')
             ->name('page.view');
 
         // rotta per l'eliminazione di una pagina
         Route::delete('delete/{id}', [PostsController::class, 'destroy'])
+            ->whereNumber('id')
             ->name('page.delete');
 
         // rotta per l'aggiornamento di una pagina
         Route::put('update/{id}', [PostsController::class, 'update'])
+            ->whereNumber('id')
             ->name('page.update');
     });
 });

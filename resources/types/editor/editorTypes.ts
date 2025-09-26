@@ -1,16 +1,11 @@
-export interface EditorBlock {
-    id: number;
-    type: keyof JSX.IntrinsicElements;
-    content: string;
-    settings?: Record<string, any>;
-}
+import { Section } from "../content/pages/pagesType";
 
 export interface EditorState {
-    blocks: EditorBlock[];
+    blocks: Section[];
     selectedBlockId: string | null;
     isDragging: boolean;
     history: {
-        past: EditorBlock[][];
-        future: EditorBlock[][];
+        past: Section[][];
+        future: Section[][];
     };
 }

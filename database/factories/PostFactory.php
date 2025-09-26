@@ -26,15 +26,15 @@ class PostFactory extends Factory
         return [
             'title' => $this->faker->sentence(2), // Genera un titolo casuale
             'slug' => Str::slug($this->faker->sentence(2)), // Crea uno slug basato sul titolo
-            'content' => json_encode([
+            'content' => [
                 'sections' => [
                     ['id' => $sectionId++ ,'type' => 'p', 'content' => $this->faker->paragraph()],
                     ['id' => $sectionId++ ,'type' => 'img', 'url' => $this->faker->imageUrl()],
                     ['id' => $sectionId++ ,'type' => 'video', 'url' => $this->faker->url()],
                 ],
-            ]),
+            ],
             'author_id' => User::inRandomOrder()->first()->id, // Assegna un autore casuale,
-            'post_type_id' => 4, // Assegna un tipo di post casuale
+            'post_type_id' => Post_Type::inRandomOrder()->first()->id, // Assegna un tipo di post casuale
             'status' => $this->faker->randomElement(['draft', 'published']), // Stato casuale
             'created_at' => now(),
             'updated_at' => now(),

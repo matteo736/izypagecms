@@ -32,6 +32,7 @@ class PostService
             ->value('value') ?? 'izy-helloTheme';
     }
 
+
     /**
      * Converte un titolo in uno slug URL-friendly.
      * 
@@ -42,16 +43,16 @@ class PostService
     {
         // Converti in minuscolo
         $slug = strtolower($title);
-        
+
         // Sostituisci spazi con trattini
         $slug = str_replace(' ', '-', $slug);
-        
+
         // Rimuovi caratteri speciali e accenti
         $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
-        
+
         // Rimuovi trattini multipli
         $slug = preg_replace('/-+/', '-', $slug);
-        
+
         // Rimuovi trattini iniziali e finali
         return trim($slug, '-');
     }
@@ -66,10 +67,11 @@ class PostService
     {
         return Post::create([
             'title' => $data['title'],
-            'content' => json_encode($data['layout']),
+            'content' => json_encode($data['content']),
             'slug' => $this->generateSlug($data['title']),
+            'status' => $data['status'],
             'author_id' => Auth::id(), // Aggiunge l'ID dell'utente autenticato
-            'post_type_id' => $data['postTypeId'],
+            'post_type_id' => $data['post_type_id'],
         ]);
     }
 
@@ -83,45 +85,29 @@ class PostService
     public function updatePost(Post $post, array $data): void
     {
         try {
-            // Aggiorniamo solo title e content, preservando lo slug esistente
-            $updateData = [];
-
-            if (isset($data['title'])) {
-                $updateData['title'] = $data['title'];
-            }
-
-            if (isset($data['layout'])) {
-                $updateData['content'] = json_encode($data['layout']);
-            }
-
-            $post->update($updateData);
+            $post->update($data);
         } catch (\Exception $e) {
             Log::error('Errore aggiornamento post', [
                 'error' => $e->getMessage(),
-                'post_id' => $post->id
+                'post_id' => $post->id,
             ]);
             throw $e;
         }
     }
 
-    /**
-     * Restituisce un nuovo post vuoto.
-     *
-     * @return Post
-     */
-    public function getEmptyPost(): Post
+    // In PostService.php
+    public function createDraftPost(array $data): Post
     {
-        return new Post([
-            'title' => 'Modifica il Titolo',
-            'content' => json_encode([
-                'sections' => [
-                    [
-                        'id' => 1,
-                        'type' => 'p',
-                        'content' => 'Inizia a scrivere qui...'
-                    ]
-                ]
-            ])
+        return Post::create([
+            'title' => $data['title'],
+            'slug' => $this->generateSlug($data['title']),
+            'content' => json_encode($data['content']),
+            'status' => 'draft',
+            'author_id' => $data['author_id'],
+            'post_type_id' => $data['post_type_id'],
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
     }
+
 }

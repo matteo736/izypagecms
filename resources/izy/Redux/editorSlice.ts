@@ -1,3 +1,4 @@
+import { HtmlTag } from '@/Components/Blocks/htmltags';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EditorBlock, EditorState } from '@types/editor/editorTypes';
 
@@ -37,6 +38,18 @@ export const editorSlice = createSlice({
                 state.history.future = [];
                 // Applica la modifica
                 block.content = action.payload.content;
+            } else {
+                console.warn('Block non trovato:', action.payload.id);
+            }
+        },
+        changeBlock: (state, action: PayloadAction<{ id: number; type: HtmlTag }>) =>{
+            const block = state.blocks.find(b => b.id === action.payload.id);
+            if (block) {
+                // Salva lo stato corrente prima della modifica
+                state.history.past.push([...state.blocks]);
+                state.history.future = [];
+                // Applica la modifica
+                block.type = action.payload.type;
             } else {
                 console.warn('Block non trovato:', action.payload.id);
             }

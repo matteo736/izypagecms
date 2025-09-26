@@ -2,7 +2,24 @@
 
 use Illuminate\Support\Str;
 
-$fallback = include_once storage_path('/izy-starter/izy-fallback-config.php');
+/*
+|--------------------------------------------------------------------------
+| ATTENZIONE SUL CARICAMENTO DEL FILE DI CONFIGURAZIONE
+|--------------------------------------------------------------------------
+| In questo file stiamo caricando un fallback di configurazione dal storage.
+| È importante usare **include** e NON include_once qui, perché:
+| 1. Il file contiene solo dati (array) e non funzioni o classi;
+| 2. Laravel può ricreare l'istanza dell'applicazione più volte nello stesso processo (es. durante i test);
+| 3. Usare include_once impedirebbe il ricaricamento corretto dei dati per ogni nuova istanza dell'app,
+|    causando comportamenti inattesi o valori non aggiornati.
+| 
+| In sintesi: qui **include** assicura che i dati vengano letti ogni volta che Laravel carica la configurazione,
+| mentre include_once bloccherebbe il ricaricamento in contesti multipli come PHPUnit.
+*/
+
+
+$fallbackFile = storage_path('izy-starter/izy-fallback-config.php');
+$fallback = (file_exists($fallbackFile) && is_array($data = include $fallbackFile)) ? $data : [];
 
 return [
 
