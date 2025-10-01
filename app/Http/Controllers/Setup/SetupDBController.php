@@ -116,7 +116,7 @@ class SetupDBController extends Controller
         }
 
         // Step 1: prepara il DB
-        $this->initializeDatabase($validatedData, $oldConfigDriver, $oldDbName, $sessionId);
+        $this->initializeDatabase($oldConfigDriver, $oldDbName, $sessionId);
 
         // salva la configurazione nel file di fallback e aggiorna la cache
         ConfigFallbackService::save($validatedData);
