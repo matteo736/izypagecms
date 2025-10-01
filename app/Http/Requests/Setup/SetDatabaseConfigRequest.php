@@ -9,20 +9,18 @@ class SetDatabaseConfigRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+
     public function authorize(): bool
     {
-        $filePath = storage_path('izy-starter/izy-fallback-config.php');
-
-        // Se il file non esiste, consideriamo che il CMS non sia inizializzato
-        if (! file_exists($filePath)) {
+        $file = storage_path('izy-starter/izy-fallback-config.php');
+        if (!is_readable($file)) {
             return true;
         }
-
-        // Includi il file per ottenere la configurazione
-        $config = include $filePath;
-
-        // Controllo se 'initialized' è false
-        return isset($config['initialized']) && $config['initialized'] === false;
+        $config = include $file;
+        if (!is_array($config)) {
+            return true; // fallback prudente
+        }
+        return array_key_exists('initialized', $config) && $config['initialized'] === false;
     }
 
     /**

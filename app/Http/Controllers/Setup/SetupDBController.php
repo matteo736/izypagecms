@@ -76,7 +76,6 @@ class SetupDBController extends Controller
      * @return void
      */
     private function initializeDatabase(
-        array $validatedData,
         string $oldConfigDriver,
         string $oldDbName,
         string $sessionId
@@ -85,11 +84,7 @@ class SetupDBController extends Controller
             $this->databaseConfigService->connectConfig();
             $this->databaseConfigService->runStartingIzyMigrations();
             $this->databaseConfigService->migrateActiveSession($oldConfigDriver, $oldDbName, $sessionId);
-
             $this->seedDefault();
-
-            ConfigFallbackService::save($validatedData);
-            $this->databaseConfigService->setConfigCacheDbInit();
         } catch (\Throwable $e) {
             Log::channel('stack')->debug('Errore durante l’inizializzazione del DB', ['data' => $e->getMessage()]);
             throw $e; // rilancio l'eccezione, così il controller può gestire il redirect con errore
@@ -122,6 +117,10 @@ class SetupDBController extends Controller
 
         // Step 1: prepara il DB
         $this->initializeDatabase($validatedData, $oldConfigDriver, $oldDbName, $sessionId);
+
+        // salva la configurazione nel file di fallback e aggiorna la cache
+        ConfigFallbackService::save($validatedData);
+        $this->databaseConfigService->setConfigCacheDbInit();
 
         // Step 2: decidi il redirect
         return $this->redirectAfterSetup();
