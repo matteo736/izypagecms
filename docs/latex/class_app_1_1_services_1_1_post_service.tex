@@ -1,0 +1,92 @@
+\doxysection{App\textbackslash{}Services\textbackslash{}Post\+Service Class Reference}
+\hypertarget{class_app_1_1_services_1_1_post_service}{}\label{class_app_1_1_services_1_1_post_service}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_post_service_a5dbd65365b01188fb13e9a6b56c9c4c7}{find\+Published\+By\+Slug}} (string \$slug)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_post_service_ae00af605869778b698a820c80b0b8a33}{get\+Active\+Theme}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_post_service_a34b8dce3c110573ea0a260044351dac1}{create\+Post}} (array \$data)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_post_service_a89c9946ae5dcbcea628410993080dbcc}{update\+Post}} (\mbox{\hyperlink{class_app_1_1_models_1_1_post}{Post}} \$post, array \$data)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_post_service_a567ebb109ad9454f0f862052379a4c1f}{create\+Draft\+Post}} (array \$data)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_app_1_1_services_1_1_post_service_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_app_1_1_services_1_1_post_service_a567ebb109ad9454f0f862052379a4c1f}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}!createDraftPost@{createDraftPost}}
+\index{createDraftPost@{createDraftPost}!App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection{\texorpdfstring{createDraftPost()}{createDraftPost()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_post_service_a567ebb109ad9454f0f862052379a4c1f} 
+App\textbackslash{}\+Services\textbackslash{}\+Post\+Service\+::create\+Draft\+Post (\begin{DoxyParamCaption}\item[{array}]{\$data}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_app_1_1_services_1_1_post_service_a34b8dce3c110573ea0a260044351dac1}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}!createPost@{createPost}}
+\index{createPost@{createPost}!App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection{\texorpdfstring{createPost()}{createPost()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_post_service_a34b8dce3c110573ea0a260044351dac1} 
+App\textbackslash{}\+Services\textbackslash{}\+Post\+Service\+::create\+Post (\begin{DoxyParamCaption}\item[{array}]{\$data}{}\end{DoxyParamCaption})}
+
+Crea un nuovo post.
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$data} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Post 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_post_service_a5dbd65365b01188fb13e9a6b56c9c4c7}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}!findPublishedBySlug@{findPublishedBySlug}}
+\index{findPublishedBySlug@{findPublishedBySlug}!App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection{\texorpdfstring{findPublishedBySlug()}{findPublishedBySlug()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_post_service_a5dbd65365b01188fb13e9a6b56c9c4c7} 
+App\textbackslash{}\+Services\textbackslash{}\+Post\+Service\+::find\+Published\+By\+Slug (\begin{DoxyParamCaption}\item[{string}]{\$slug}{}\end{DoxyParamCaption})}
+
+Restituisce un post pubblicato in base allo slug.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$slug} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Post 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_post_service_ae00af605869778b698a820c80b0b8a33}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}!getActiveTheme@{getActiveTheme}}
+\index{getActiveTheme@{getActiveTheme}!App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection{\texorpdfstring{getActiveTheme()}{getActiveTheme()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_post_service_ae00af605869778b698a820c80b0b8a33} 
+App\textbackslash{}\+Services\textbackslash{}\+Post\+Service\+::get\+Active\+Theme (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Restituisce il tema attivo
+
+\begin{DoxyReturn}{Returns}
+string 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_post_service_a89c9946ae5dcbcea628410993080dbcc}\index{App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}!updatePost@{updatePost}}
+\index{updatePost@{updatePost}!App\textbackslash{}Services\textbackslash{}PostService@{App\textbackslash{}Services\textbackslash{}PostService}}
+\doxysubsubsection{\texorpdfstring{updatePost()}{updatePost()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_post_service_a89c9946ae5dcbcea628410993080dbcc} 
+App\textbackslash{}\+Services\textbackslash{}\+Post\+Service\+::update\+Post (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_post}{Post}}}]{\$post}{, }\item[{array}]{\$data}{}\end{DoxyParamCaption})}
+
+Aggiorna un post esistente preservando lo slug.
+
+
+\begin{DoxyParams}[1]{Parameters}
+Post & {\em \$post} & \\
+\hline
+array & {\em \$data} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+app/\+Services/\mbox{\hyperlink{_post_service_8php}{Post\+Service.\+php}}\end{DoxyCompactItemize}

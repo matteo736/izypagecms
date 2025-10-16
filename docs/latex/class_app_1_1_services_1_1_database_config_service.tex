@@ -1,0 +1,225 @@
+\doxysection{App\textbackslash{}Services\textbackslash{}Database\+Config\+Service Class Reference}
+\hypertarget{class_app_1_1_services_1_1_database_config_service}{}\label{class_app_1_1_services_1_1_database_config_service}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_aeec713068c9438bc2451ab2b7aa1778b}{\+\_\+\+\_\+construct}} (array \$config)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a9d1c692477237e58d731ed2f56c776d8}{test\+Connection}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a9c58a090dae604daeb6424138f909116}{connect\+Config}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_ac0daac63f33283b805c2d544be743843}{get\+Config}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a610a119544480f4b22739864653a088f}{update\+Data}} (array \$new\+Config)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a280caaf005020dba55a4bbe6a41bb173}{connect\+New\+Config}} (array \$new\+Config)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_ae85c56bfd65f65ce61e53522d1a472e8}{run\+Starting\+Izy\+Migrations}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a8a2aef0a5b56c368424e8c5dc30537f2}{migrate\+Active\+Session}} (string \$old\+Connection, string \$old\+Db\+Name, string \$session\+Id)
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_ac5b4b2ee4937ed5f0ac4857e3f3e1bae}{run\+Permission\+Seeder}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a1a7d8c2a4f9c35cf5e54ff5f75b39241}{run\+Post\+Type\+Seeder}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a15bd283d861e96005200fe2b09befad1}{run\+Role\+Seeder}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a3258912a42eab3122c4efc707a57669a}{set\+Config\+Cache\+Db\+Init}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a8733f1fb25c475eee0895b5bc1e4a55d}{build\+Connection\+Config}} ()
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_ac06ea273e7df9efae960fd2aae12e49d}{run\+Seeder}} (string \$seeder\+Class)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_services_1_1_database_config_service_a1a662fed9d3075645048d42b33438c1d}{\$config}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-constructors}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_aeec713068c9438bc2451ab2b7aa1778b}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!\_\_construct@{\_\_construct}}
+\index{\_\_construct@{\_\_construct}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{\_\_construct()}{\_\_construct()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_aeec713068c9438bc2451ab2b7aa1778b} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::\+\_\+\+\_\+construct (\begin{DoxyParamCaption}\item[{array}]{\$config}{}\end{DoxyParamCaption})}
+
+Database\+Config\+Service constructor.
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$config} & \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_a8733f1fb25c475eee0895b5bc1e4a55d}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!buildConnectionConfig@{buildConnectionConfig}}
+\index{buildConnectionConfig@{buildConnectionConfig}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{buildConnectionConfig()}{buildConnectionConfig()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a8733f1fb25c475eee0895b5bc1e4a55d} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::build\+Connection\+Config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Costruisce l\textquotesingle{}array di configurazione per la connessione.
+
+\begin{DoxyReturn}{Returns}
+array 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_a9c58a090dae604daeb6424138f909116}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!connectConfig@{connectConfig}}
+\index{connectConfig@{connectConfig}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{connectConfig()}{connectConfig()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a9c58a090dae604daeb6424138f909116} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::connect\+Config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Imposta la nuova configurazione del database e riconnette. \Hypertarget{class_app_1_1_services_1_1_database_config_service_a280caaf005020dba55a4bbe6a41bb173}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!connectNewConfig@{connectNewConfig}}
+\index{connectNewConfig@{connectNewConfig}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{connectNewConfig()}{connectNewConfig()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a280caaf005020dba55a4bbe6a41bb173} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::connect\+New\+Config (\begin{DoxyParamCaption}\item[{array}]{\$new\+Config}{}\end{DoxyParamCaption})}
+
+Aggiorna la configurazione e riconnette.
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$new\+Config} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_ac0daac63f33283b805c2d544be743843}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!getConfig@{getConfig}}
+\index{getConfig@{getConfig}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{getConfig()}{getConfig()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_ac0daac63f33283b805c2d544be743843} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::get\+Config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Restituisci la configurazione interna.
+
+\begin{DoxyReturn}{Returns}
+array \$config 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_a8a2aef0a5b56c368424e8c5dc30537f2}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!migrateActiveSession@{migrateActiveSession}}
+\index{migrateActiveSession@{migrateActiveSession}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{migrateActiveSession()}{migrateActiveSession()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a8a2aef0a5b56c368424e8c5dc30537f2} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::migrate\+Active\+Session (\begin{DoxyParamCaption}\item[{string}]{\$old\+Connection}{, }\item[{string}]{\$old\+Db\+Name}{, }\item[{string}]{\$session\+Id}{}\end{DoxyParamCaption})}
+
+Migra la sessione attiva dal vecchio database al nuovo controllando che la migrazioni sia possibile.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$old\+Connection} & \\
+\hline
+string & {\em \$old\+Db\+Name} & \\
+\hline
+string & {\em \$session\+Id} & \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+Exception \Hypertarget{class_app_1_1_services_1_1_database_config_service_ac5b4b2ee4937ed5f0ac4857e3f3e1bae}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!runPermissionSeeder@{runPermissionSeeder}}
+\index{runPermissionSeeder@{runPermissionSeeder}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{runPermissionSeeder()}{runPermissionSeeder()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_ac5b4b2ee4937ed5f0ac4857e3f3e1bae} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::run\+Permission\+Seeder (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Esegue il seeder dei permessi. \Hypertarget{class_app_1_1_services_1_1_database_config_service_a1a7d8c2a4f9c35cf5e54ff5f75b39241}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!runPostTypeSeeder@{runPostTypeSeeder}}
+\index{runPostTypeSeeder@{runPostTypeSeeder}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{runPostTypeSeeder()}{runPostTypeSeeder()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a1a7d8c2a4f9c35cf5e54ff5f75b39241} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::run\+Post\+Type\+Seeder (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Esegue il seeder dei permessi. \Hypertarget{class_app_1_1_services_1_1_database_config_service_a15bd283d861e96005200fe2b09befad1}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!runRoleSeeder@{runRoleSeeder}}
+\index{runRoleSeeder@{runRoleSeeder}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{runRoleSeeder()}{runRoleSeeder()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a15bd283d861e96005200fe2b09befad1} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::run\+Role\+Seeder (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Esegue il seeder dei ruoli. \Hypertarget{class_app_1_1_services_1_1_database_config_service_ac06ea273e7df9efae960fd2aae12e49d}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!runSeeder@{runSeeder}}
+\index{runSeeder@{runSeeder}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{runSeeder()}{runSeeder()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_ac06ea273e7df9efae960fd2aae12e49d} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::run\+Seeder (\begin{DoxyParamCaption}\item[{string}]{\$seeder\+Class}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Esegue un seeder specifico.
+
+
+\begin{DoxyParams}[1]{Parameters}
+string & {\em \$seeder\+Class} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_ae85c56bfd65f65ce61e53522d1a472e8}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!runStartingIzyMigrations@{runStartingIzyMigrations}}
+\index{runStartingIzyMigrations@{runStartingIzyMigrations}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{runStartingIzyMigrations()}{runStartingIzyMigrations()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_ae85c56bfd65f65ce61e53522d1a472e8} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::run\+Starting\+Izy\+Migrations (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Esegue le migrazioni iniziali se necessario.
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+Exception \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+Throwable \Hypertarget{class_app_1_1_services_1_1_database_config_service_a3258912a42eab3122c4efc707a57669a}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!setConfigCacheDbInit@{setConfigCacheDbInit}}
+\index{setConfigCacheDbInit@{setConfigCacheDbInit}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{setConfigCacheDbInit()}{setConfigCacheDbInit()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a3258912a42eab3122c4efc707a57669a} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::set\+Config\+Cache\+Db\+Init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Aggiorna il cache con i valori di configurazione se il database è inizializzato. \Hypertarget{class_app_1_1_services_1_1_database_config_service_a9d1c692477237e58d731ed2f56c776d8}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!testConnection@{testConnection}}
+\index{testConnection@{testConnection}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{testConnection()}{testConnection()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a9d1c692477237e58d731ed2f56c776d8} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::test\+Connection (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Testa la connessione al database tramite PDO.
+
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_a610a119544480f4b22739864653a088f}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!updateData@{updateData}}
+\index{updateData@{updateData}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{updateData()}{updateData()}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a610a119544480f4b22739864653a088f} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::update\+Data (\begin{DoxyParamCaption}\item[{array}]{\$new\+Config}{}\end{DoxyParamCaption})}
+
+Aggiorna la configurazione interna.
+
+
+\begin{DoxyParams}[1]{Parameters}
+array & {\em \$new\+Config} & \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-variable-members}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_app_1_1_services_1_1_database_config_service_a1a662fed9d3075645048d42b33438c1d}\index{App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}!\$config@{\$config}}
+\index{\$config@{\$config}!App\textbackslash{}Services\textbackslash{}DatabaseConfigService@{App\textbackslash{}Services\textbackslash{}DatabaseConfigService}}
+\doxysubsubsection{\texorpdfstring{\$config}{\$config}}
+{\footnotesize\ttfamily \label{class_app_1_1_services_1_1_database_config_service_a1a662fed9d3075645048d42b33438c1d} 
+App\textbackslash{}\+Services\textbackslash{}\+Database\+Config\+Service\+::\$config\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+app/\+Services/\mbox{\hyperlink{_database_config_service_8php}{Database\+Config\+Service.\+php}}\end{DoxyCompactItemize}

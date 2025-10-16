@@ -1,6 +1,7 @@
 import { HtmlTag } from '@/Components/Blocks/htmltags';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EditorBlock, EditorState } from '@types/editor/editorTypes';
+import { EditorState } from '@types/editor/editorTypes';
+import { Section as EditorBlock } from '@types/content/pages/pagesType';
 
 const initialState: EditorState = {
     blocks: [],

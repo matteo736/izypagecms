@@ -77,7 +77,7 @@ const EditableElement = ({ type, content, id }:
                         <CommandList>
                             <CommandGroup heading={'Seleziona:'}>
                                 <CommandItem asChild>
-                                    <Button className={"w-full"} variant={"destructive"} onClick={() => dispatch(deleteBlock(id))}>
+                                    <Button type='button' className={"w-full"} variant={"destructive"} onClick={() => dispatch(deleteBlock(id))}>
                                         Elimina <X />
                                     </Button>
                                 </CommandItem>

@@ -1,0 +1,130 @@
+\doxysection{App\textbackslash{}Policies\textbackslash{}Post\+Policy Class Reference}
+\hypertarget{class_app_1_1_policies_1_1_post_policy}{}\label{class_app_1_1_policies_1_1_post_policy}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_a975558743f20cb61f361c9472984e7ea}{can\+Access}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user, \$content)
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_af75d5ede8926c3e975ac25897ce8fba8}{create}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user)
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_a26cb7222284d99a5c7a79f4a9c78b2be}{edit}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user)
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_ad64155803e7cd161cf27f77975594a3f}{delete}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_ae3441369ae29862ac35c87d197115317}{has\+Global\+Access}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user)
+\item 
+\mbox{\hyperlink{class_app_1_1_policies_1_1_post_policy_af58dd661a95e1b9e03c04e75fde63f35}{is\+Content\+Owner}} (\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}} \$user, \$content)
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_a975558743f20cb61f361c9472984e7ea}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!canAccess@{canAccess}}
+\index{canAccess@{canAccess}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{canAccess()}{canAccess()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_a975558743f20cb61f361c9472984e7ea} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::can\+Access (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{, }\item[{}]{\$content}{}\end{DoxyParamCaption})}
+
+Regola generale per l\textquotesingle{}accesso ai contenuti.
+
+
+\begin{DoxyParams}[1]{Parameters}
+User & {\em \$user} & \\
+\hline
+mixed & {\em \$content} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_af75d5ede8926c3e975ac25897ce8fba8}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!create@{create}}
+\index{create@{create}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_af75d5ede8926c3e975ac25897ce8fba8} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::create (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{}\end{DoxyParamCaption})}
+
+Determina se l\textquotesingle{}utente può creare un post.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\textbackslash{}\+App\textbackslash{}\+Models\textbackslash{}\+User & {\em \$user} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_ad64155803e7cd161cf27f77975594a3f}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!delete@{delete}}
+\index{delete@{delete}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{delete()}{delete()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_ad64155803e7cd161cf27f77975594a3f} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::delete (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{}\end{DoxyParamCaption})}
+
+Determina se l\textquotesingle{}utente può modificare un post.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\textbackslash{}\+App\textbackslash{}\+Models\textbackslash{}\+User & {\em \$user} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_a26cb7222284d99a5c7a79f4a9c78b2be}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!edit@{edit}}
+\index{edit@{edit}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{edit()}{edit()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_a26cb7222284d99a5c7a79f4a9c78b2be} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::edit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{}\end{DoxyParamCaption})}
+
+Determina se l\textquotesingle{}utente può modificare un post.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\textbackslash{}\+App\textbackslash{}\+Models\textbackslash{}\+User & {\em \$user} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_ae3441369ae29862ac35c87d197115317}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!hasGlobalAccess@{hasGlobalAccess}}
+\index{hasGlobalAccess@{hasGlobalAccess}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{hasGlobalAccess()}{hasGlobalAccess()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_ae3441369ae29862ac35c87d197115317} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::has\+Global\+Access (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Verifica se l\textquotesingle{}utente ha accesso globale.
+
+
+\begin{DoxyParams}[1]{Parameters}
+User & {\em \$user} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_policies_1_1_post_policy_af58dd661a95e1b9e03c04e75fde63f35}\index{App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}!isContentOwner@{isContentOwner}}
+\index{isContentOwner@{isContentOwner}!App\textbackslash{}Policies\textbackslash{}PostPolicy@{App\textbackslash{}Policies\textbackslash{}PostPolicy}}
+\doxysubsubsection{\texorpdfstring{isContentOwner()}{isContentOwner()}}
+{\footnotesize\ttfamily \label{class_app_1_1_policies_1_1_post_policy_af58dd661a95e1b9e03c04e75fde63f35} 
+App\textbackslash{}\+Policies\textbackslash{}\+Post\+Policy\+::is\+Content\+Owner (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_app_1_1_models_1_1_user}{User}}}]{\$user}{, }\item[{}]{\$content}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Verifica se l\textquotesingle{}utente è il creatore del contenuto.
+
+
+\begin{DoxyParams}[1]{Parameters}
+User & {\em \$user} & \\
+\hline
+mixed & {\em \$content} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+app/\+Policies/\mbox{\hyperlink{_post_policy_8php}{Post\+Policy.\+php}}\end{DoxyCompactItemize}
